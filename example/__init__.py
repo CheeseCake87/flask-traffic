@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 
 from flask_traffic import Traffic, LogPolicy
-from flask_traffic.stores import JSONStore
+from flask_traffic.stores import CSVStore
 
 log_policy = LogPolicy(
     request_browser=True,
@@ -10,12 +10,12 @@ log_policy = LogPolicy(
     response_exception=True,
 )
 
-json_store = JSONStore()
+store = CSVStore(log_policy=log_policy)
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    Traffic(app, stores=json_store)
+    Traffic(app, stores=store)
 
     @app.route("/")
     def index():

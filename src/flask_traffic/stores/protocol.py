@@ -1,0 +1,25 @@
+import typing as t
+from datetime import datetime
+
+if t.TYPE_CHECKING:
+    from flask_traffic import Traffic
+
+
+class StoreProtocol(t.Protocol):
+    def setup(self, traffic_instance: "Traffic") -> None: ...
+    def log(
+        self,
+        request_date: t.Optional[datetime] = None,
+        request_method: t.Optional[str] = None,
+        request_path: t.Optional[str] = None,
+        request_remote_address: t.Optional[str] = None,
+        request_referrer: t.Optional[str] = None,
+        request_user_agent: t.Optional[str] = None,
+        request_browser: t.Optional[str] = None,
+        request_platform: t.Optional[str] = None,
+        response_time: t.Optional[int] = None,
+        response_size: t.Optional[str] = None,
+        response_status_code: t.Optional[int] = None,
+        response_exception: t.Optional[str] = None,
+        response_mimetype: t.Optional[str] = None,
+    ): ...

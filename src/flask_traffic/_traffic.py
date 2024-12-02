@@ -5,20 +5,19 @@ from pathlib import Path
 
 from flask import Flask, g, request
 
-if t.TYPE_CHECKING:
-    from .stores.json_store import JSONStore
+from .stores.protocol import StoreProtocol
 
 
 class Traffic:
     app: Flask
     app_instance_folder: t.Optional[Path]
 
-    stores: t.List["JSONStore"]
+    stores: t.Union[StoreProtocol, t.List[StoreProtocol]]
 
     def __init__(
         self,
         app: t.Optional[Flask] = None,
-        stores: t.Optional[t.Union["JSONStore", t.List[t.Union["JSONStore"]]]] = None,
+        stores: t.Optional[t.Union[StoreProtocol, t.List[StoreProtocol]]] = None,
     ) -> None:
         if app is not None:
             if stores is None:
@@ -26,7 +25,9 @@ class Traffic:
             self.init_app(app, stores)
 
     def init_app(
-        self, app: Flask, stores: t.Union[t.Any, t.List[t.Union[t.Any]]]
+        self,
+        app: Flask,
+        stores: t.Union[t.Union[StoreProtocol, t.List[StoreProtocol]]],
     ) -> None:
         if app is None:
             raise ImportError(
