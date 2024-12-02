@@ -4,6 +4,7 @@
 venv*/
 __pycache__/
 dist/
+instance/
 .coverage*
 htmlcov/
 .tox/
