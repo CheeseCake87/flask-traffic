@@ -7,11 +7,14 @@ if t.TYPE_CHECKING:
 
 
 class StoreProtocol(t.Protocol):
+    """
+    The protocol to follow for a valid *Store.
+    """
     log_policy: "LogPolicy"
 
-    def setup(self, traffic_instance: "Traffic") -> None: ...
+    def _setup(self, traffic_instance: "Traffic") -> None: ...
 
-    def log(
+    def _log(
         self,
         request_date: t.Optional[datetime] = None,
         request_method: t.Optional[str] = None,
@@ -26,4 +29,4 @@ class StoreProtocol(t.Protocol):
         response_status_code: t.Optional[int] = None,
         response_exception: t.Optional[str] = None,
         response_mimetype: t.Optional[str] = None,
-    ): ...
+    ) -> None: ...

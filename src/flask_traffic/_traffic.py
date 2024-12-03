@@ -7,8 +7,15 @@ from flask import Flask, g, request
 
 from .stores._protocols import StoreProtocol
 
+if t.TYPE_CHECKING:
+    from flask import Response
+
 
 class Traffic:
+    """
+    The Traffic class registers the extension with the Flask app and
+    sets up any passed in stores.
+    """
     app: Flask
     app_instance_folder: t.Optional[Path]
 
@@ -19,6 +26,12 @@ class Traffic:
         app: t.Optional[Flask] = None,
         stores: t.Optional[t.Union[StoreProtocol, t.List[StoreProtocol]]] = None,
     ) -> None:
+        """
+        Initialize the flask-traffic extension.
+
+        :param app: the flask app to attach the extension to
+        :param stores: a single store or stores to log traffic data to
+        """
         if app is not None:
             if stores is None:
                 raise ImportError("No stores were passed in.")
@@ -29,6 +42,12 @@ class Traffic:
         app: Flask,
         stores: t.Union[t.Union[StoreProtocol, t.List[StoreProtocol]]],
     ) -> None:
+        """
+        Initialize the flask-traffic extension.
+
+        :param app: the flask app to attach the extension to
+        :param stores: a single store or stores to log traffic data to
+        """
         if app is None:
             raise ImportError(
                 "No app was passed in, do traffic = Traffic(flaskapp) or traffic.init_app(app)"
@@ -48,20 +67,30 @@ class Traffic:
         self._setup_stores()
         self._setup_request_watcher()
 
-    def _setup_stores(self):
+    def _setup_stores(self) -> None:
+        """
+        Private method.
+        Set up the stores that were passed in.
+        :return:
+        """
         for store in self.stores:
-            store.setup(self)
+            store._setup(self)
 
-    def _setup_request_watcher(self):
+    def _setup_request_watcher(self) -> None:
+        """
+        Private method.
+        Set up before, after and teardown functions.
+        :return:
+        """
         @self.app.before_request
         def traffic_before_request():
             g.traffic_timer = timeit.default_timer()
 
         @self.app.after_request
-        def traffic_after_request(response):
+        def traffic_after_request(response) -> Response:
             for store in self.stores:
                 if not store.log_policy.log_only_on_exception:
-                    store.log(
+                    store._log(
                         request_date=datetime.now(),
                         request_method=request.method,
                         request_path=request.path,
@@ -82,7 +111,7 @@ class Traffic:
             return response
 
         @self.app.teardown_request
-        def traffic_teardown_request(exception):
+        def traffic_teardown_request(exception: t.Any) -> None:
             if exception:
                 try:
                     message = exception.__repr__()
@@ -91,7 +120,7 @@ class Traffic:
 
                 for store in self.stores:
                     if store.log_policy.response_exception:
-                        store.log(
+                        store._log(
                             request_date=datetime.now(),
                             request_method=request.method,
                             request_path=request.path,
