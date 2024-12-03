@@ -5,7 +5,7 @@ from pathlib import Path
 
 from flask import Flask, g, request
 
-from .stores.protocol import StoreProtocol
+from .stores._protocols import StoreProtocol
 
 
 class Traffic:

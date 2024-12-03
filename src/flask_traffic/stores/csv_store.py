@@ -103,6 +103,7 @@ class CSVStore:
             writer = csv.DictWriter(f, fieldnames=data.keys())  # type: ignore
 
             if f.tell() == 0:
+                # write the header if the file is empty
                 writer.writeheader()
 
             writer.writerow(data)

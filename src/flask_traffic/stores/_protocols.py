@@ -7,6 +7,7 @@ if t.TYPE_CHECKING:
 
 class StoreProtocol(t.Protocol):
     def setup(self, traffic_instance: "Traffic") -> None: ...
+
     def log(
         self,
         request_date: t.Optional[datetime] = None,
