@@ -12,7 +12,7 @@ if t.TYPE_CHECKING:
     from sqlalchemy.sql._typing import _DMLTableArgument
 
 
-class ORMTrafficMixin:
+class SQLORMTrafficMixin:
     """
     A mixin for use with ORM SQLAlchemy / Flask-SQLAlchemy models.
 
@@ -67,7 +67,7 @@ class ORMTrafficMixin:
     response_mimetype = Column(String, nullable=True)
 
 
-class ORMStore:
+class SQLORMStore:
     db_session: t.Optional["Session"]
     model: "_DMLTableArgument"
 
@@ -78,7 +78,7 @@ class ORMStore:
         log_policy: LogPolicy = None,
     ) -> None:
         """
-        Create a new ORMStore instance.
+        Create a new SQLORMStore instance.
 
         :param model: the SQLAlchemy model to insert logs into
         :param db_session: the SQLAlchemy session to use (this is automatically set if using Flask-SQLAlchemy)
@@ -108,7 +108,7 @@ class ORMStore:
 
     def _setup(self, traffic_instance: "Traffic") -> None:
         """
-        Set up the ORMStore instance.
+        Set up the SQLORMStore instance.
 
         :param traffic_instance:
         :return:

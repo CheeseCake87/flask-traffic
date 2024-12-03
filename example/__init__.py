@@ -2,8 +2,8 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 from flask_traffic import Traffic, LogPolicy
-from flask_traffic.stores import JSONStore, CSVStore, SQLStore, ORMStore, \
-    ORMTrafficMixin
+from flask_traffic.stores import JSONStore, CSVStore, SQLStore, SQLORMStore, \
+    SQLORMTrafficMixin
 
 # create an instance of the flask_sqlalchemy extension
 db = SQLAlchemy()
@@ -37,12 +37,12 @@ json_store = JSONStore(log_policy=only_on_exception)
 
 
 # create an ORM store that links to the flask_sqlalchemy extension
-class TrafficModel(db.Model, ORMTrafficMixin):
+class TrafficModel(db.Model, SQLORMTrafficMixin):
     pass
 
 
 # create an ORM store and pass the above model
-orm_store = ORMStore(model=TrafficModel)
+orm_store = SQLORMStore(model=TrafficModel)
 
 
 def create_app() -> Flask:
