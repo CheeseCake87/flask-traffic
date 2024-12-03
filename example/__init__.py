@@ -57,10 +57,10 @@ def create_app() -> Flask:
     # place the traffic extension below the db.init_app(app) line,
     # this will pick up th db.session automatically from db.init_app(app)
     traffic.init_app(app, stores=[json_store, csv_store, sqlite_store, orm_store])
-
     # You can add multiple stores at once, and they will all log data
     # based on the log policy
 
+    # This will create an exemption, and be stored in the json_store
     @app.route("/")
     def index():
         return render_template("index1.html")
