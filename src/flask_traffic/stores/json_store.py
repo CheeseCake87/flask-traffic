@@ -2,10 +2,10 @@ import typing as t
 from datetime import datetime
 from json import dumps, loads
 from pathlib import Path
+from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
-    from .._log_policy import LogPolicy
 
 
 class JSONStore:
@@ -13,7 +13,7 @@ class JSONStore:
     location: t.Optional[t.Union[str, Path]]
 
     filepath: Path
-    log_policy: "LogPolicy"
+    log_policy: LogPolicy
 
     _traffic_instance = None
 
@@ -21,7 +21,7 @@ class JSONStore:
         self,
         filename: str = "traffic.json",
         location: t.Optional[t.Union[str, Path]] = None,
-        log_policy: "LogPolicy" = None,
+        log_policy: LogPolicy = None,
     ) -> None:
         self.filename = filename
         self.location = location
@@ -89,6 +89,9 @@ class JSONStore:
         data = {}
 
         for attr, attr_val in self.log_policy.__dict__.items():
+            if attr == "log_only_on_exception":
+                continue
+
             if attr_val:
                 if isinstance(locals()[attr], datetime):
                     data[attr] = locals()[attr].isoformat()

@@ -14,6 +14,8 @@ class LogPolicy:
     response_exception: bool
     response_mimetype: bool
 
+    log_only_on_exception: bool = False
+
     def __init__(
         self,
         request_date: bool = False,
@@ -29,6 +31,7 @@ class LogPolicy:
         response_status_code: bool = False,
         response_exception: bool = False,
         response_mimetype: bool = False,
+        log_only_on_exception: bool = False,
     ):
         self.request_date = request_date
         self.request_method = request_method
@@ -44,3 +47,5 @@ class LogPolicy:
         self.response_status_code = response_status_code
         self.response_exception = response_exception
         self.response_mimetype = response_mimetype
+
+        self.log_only_on_exception = log_only_on_exception

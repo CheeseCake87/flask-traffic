@@ -60,31 +60,51 @@ class Traffic:
         @self.app.after_request
         def traffic_after_request(response):
             for store in self.stores:
-                store.log(
-                    request_date=datetime.now(),
-                    request_method=request.method,
-                    request_path=request.path,
-                    request_user_agent=request.user_agent.string,
-                    request_remote_address=request.remote_addr,
-                    request_referrer=request.referrer,
-                    request_browser=request.user_agent.browser,
-                    request_platform=request.user_agent.platform,
-                    response_time=int(
-                        (timeit.default_timer() - g.traffic_timer) * 1000
-                    ),
-                    response_size=response.content_length,
-                    response_status_code=response.status_code,
-                    response_exception=None,
-                    response_mimetype=response.mimetype,
-                )
+                if not store.log_policy.log_only_on_exception:
+                    store.log(
+                        request_date=datetime.now(),
+                        request_method=request.method,
+                        request_path=request.path,
+                        request_user_agent=request.user_agent.string,
+                        request_remote_address=request.remote_addr,
+                        request_referrer=request.referrer,
+                        request_browser=request.user_agent.browser,
+                        request_platform=request.user_agent.platform,
+                        response_time=int(
+                            (timeit.default_timer() - g.traffic_timer) * 1000
+                        ),
+                        response_size=response.content_length,
+                        response_status_code=response.status_code,
+                        response_exception=None,
+                        response_mimetype=response.mimetype,
+                    )
 
             return response
 
         @self.app.teardown_request
         def traffic_teardown_request(exception):
             if exception:
+                try:
+                    message = exception.__repr__()
+                except AttributeError:
+                    message = str(exception)
+
                 for store in self.stores:
-                    store.log(
-                        request_date=datetime.now(),
-                        response_exception=str(exception),
-                    )
+                    if store.log_policy.response_exception:
+                        store.log(
+                            request_date=datetime.now(),
+                            request_method=request.method,
+                            request_path=request.path,
+                            request_user_agent=request.user_agent.string,
+                            request_remote_address=request.remote_addr,
+                            request_referrer=request.referrer,
+                            request_browser=request.user_agent.browser,
+                            request_platform=request.user_agent.platform,
+                            response_time=int(
+                                (timeit.default_timer() - g.traffic_timer) * 1000
+                            ),
+                            response_size=None,
+                            response_status_code=500,
+                            response_exception=message,
+                            response_mimetype=None,
+                        )

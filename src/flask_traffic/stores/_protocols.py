@@ -3,9 +3,12 @@ from datetime import datetime
 
 if t.TYPE_CHECKING:
     from flask_traffic import Traffic
+    from flask_traffic._log_policy import LogPolicy
 
 
 class StoreProtocol(t.Protocol):
+    log_policy: "LogPolicy"
+
     def setup(self, traffic_instance: "Traffic") -> None: ...
 
     def log(

@@ -4,9 +4,10 @@ from datetime import datetime
 from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy import insert
 
+from .._log_policy import LogPolicy
+
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
-    from .._log_policy import LogPolicy
     from sqlalchemy.orm import Session
     from sqlalchemy.sql._typing import _DMLTableArgument
 
@@ -37,7 +38,7 @@ class ORMStore:
         self,
         model: "_DMLTableArgument",
         db_session: t.Optional["Session"] = None,
-        log_policy: "LogPolicy" = None,
+        log_policy: LogPolicy = None,
     ) -> None:
         if log_policy is None:
             from .._log_policy import LogPolicy
@@ -97,11 +98,15 @@ class ORMStore:
     ):
         data = {}
 
-        for local_attr, local_attr_value in locals().items():
-            if local_attr == "self":
+        for attr, attr_val in self.log_policy.__dict__.items():
+            if attr == "log_only_on_exception":
                 continue
-            if hasattr(self.model, local_attr):
-                data[local_attr] = local_attr_value
+
+            if attr_val:
+                data[attr] = locals()[attr]
+
+            else:
+                data[attr] = None
 
         self.db_session.execute(insert(self.model).values(data))
         self.db_session.commit()
