@@ -1,9 +1,10 @@
 # flask-traffic
 Store and monitor site traffic.
 
-## Under Development
+`pip install flask-traffic`
 
-- install `uv`
-- install requirements `uv pip install -r requirements/dev.txt`
-- install local `uv run flit install --symlink`
-- run example `uv run flask --app example run --debug`
+Currently under development.
+
+Look in the `example` directory for a working example.
+
+[https://github.com/CheeseCake87/flask-traffic/tree/main/example](https://github.com/CheeseCake87/flask-traffic/tree/main/example)
