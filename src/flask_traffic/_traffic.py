@@ -19,6 +19,9 @@ class Traffic:
 
     stores: t.Union[StoreProtocol, t.List[StoreProtocol]]
 
+    def __repr__(self) -> str:
+        return f"<Traffic stores={self.stores}>"
+
     def __init__(
         self,
         app: t.Optional[Flask] = None,

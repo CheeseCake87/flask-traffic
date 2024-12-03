@@ -71,6 +71,9 @@ class SQLORMStore:
     db_session: t.Optional["Session"]
     model: "_DMLTableArgument"
 
+    def __repr__(self) -> str:
+        return f"<SQLORMStore model={self.model.__name__} log_policy={self.log_policy}>"
+
     def __init__(
         self,
         model: "_DMLTableArgument",

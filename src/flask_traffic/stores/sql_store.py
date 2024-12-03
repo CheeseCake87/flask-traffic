@@ -26,6 +26,15 @@ class SQLStore:
 
     _traffic_instance = None
 
+    def __repr__(self) -> str:
+        if self.database_url:
+            return f"<SQLStore database_url={self.database_url} log_policy={self.log_policy}>"
+
+        if self.database_engine:
+            return f"<SQLStore database_engine={self.database_engine} log_policy={self.log_policy}>"
+
+        return f"<SQLStore filename={self.filepath} log_policy={self.log_policy}>"
+
     def __init__(
         self,
         filename: t.Optional[str] = "traffic.sqlite",

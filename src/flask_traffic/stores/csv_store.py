@@ -18,6 +18,9 @@ class CSVStore:
 
     _traffic_instance = None
 
+    def __repr__(self) -> str:
+        return f"<CSVStore filename={self.filepath} log_policy={self.log_policy}>"
+
     def __init__(
         self,
         filename: str = "traffic.csv",

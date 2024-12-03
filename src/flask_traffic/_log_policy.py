@@ -27,6 +27,9 @@ class LogPolicy:
     log_only_on_exception: bool = False
     skip_log_on_exception: bool = False
 
+    def __repr__(self) -> str:
+        return f"<LogPolicy {self.__dict__}>"
+
     def __init__(
         self,
         log_only_on_exception: bool = False,
