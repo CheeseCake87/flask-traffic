@@ -4,11 +4,9 @@ from datetime import datetime
 from pathlib import Path
 
 from flask import Flask, g, request
+from flask import Response
 
 from .stores._protocols import StoreProtocol
-
-if t.TYPE_CHECKING:
-    from flask import Response
 
 
 class Traffic:
@@ -82,6 +80,7 @@ class Traffic:
         Set up before, after and teardown functions.
         :return:
         """
+
         @self.app.before_request
         def traffic_before_request():
             g.traffic_timer = timeit.default_timer()
