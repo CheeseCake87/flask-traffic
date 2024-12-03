@@ -138,7 +138,7 @@ class SQLStore:
             Column("response_mimetype", String, nullable=True),
         )
 
-    def _setup(self, traffic_instance: "Traffic") -> None:
+    def setup(self, traffic_instance: "Traffic") -> None:
         """
         Set up the SQLStore instance.
 
@@ -157,7 +157,7 @@ class SQLStore:
 
         self.database_metadata.create_all(self.database_engine)
 
-    def _log(
+    def log(
         self,
         request_date: t.Optional[datetime] = None,
         request_method: t.Optional[str] = None,

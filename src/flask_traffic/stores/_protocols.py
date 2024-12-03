@@ -12,9 +12,9 @@ class StoreProtocol(t.Protocol):
     """
     log_policy: "LogPolicy"
 
-    def _setup(self, traffic_instance: "Traffic") -> None: ...
+    def setup(self, traffic_instance: "Traffic") -> None: ...
 
-    def _log(
+    def log(
         self,
         request_date: t.Optional[datetime] = None,
         request_method: t.Optional[str] = None,

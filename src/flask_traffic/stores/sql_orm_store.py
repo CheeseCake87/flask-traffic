@@ -106,7 +106,7 @@ class SQLORMStore:
         self.model = model
         self.db_session = db_session
 
-    def _setup(self, traffic_instance: "Traffic") -> None:
+    def setup(self, traffic_instance: "Traffic") -> None:
         """
         Set up the SQLORMStore instance.
 
@@ -130,7 +130,7 @@ class SQLORMStore:
                     "ORMStore(..., db_session=session)"
                 )
 
-    def _log(
+    def log(
         self,
         request_date: t.Optional[datetime] = None,
         request_method: t.Optional[str] = None,

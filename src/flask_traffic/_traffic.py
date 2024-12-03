@@ -74,7 +74,7 @@ class Traffic:
         :return:
         """
         for store in self.stores:
-            store._setup(self)
+            store.setup(self)
 
     def _setup_request_watcher(self) -> None:
         """
@@ -90,7 +90,7 @@ class Traffic:
         def traffic_after_request(response) -> Response:
             for store in self.stores:
                 if not store.log_policy.log_only_on_exception:
-                    store._log(
+                    store.log(
                         request_date=datetime.now(),
                         request_method=request.method,
                         request_path=request.path,
@@ -120,7 +120,7 @@ class Traffic:
 
                 for store in self.stores:
                     if store.log_policy.response_exception:
-                        store._log(
+                        store.log(
                             request_date=datetime.now(),
                             request_method=request.method,
                             request_path=request.path,
