@@ -146,7 +146,7 @@ class SQLORMStore:
         :param request_user_agent: the user agent of the request
         :param request_browser: the browser of the request (if able to be determined)
         :param request_platform: the platform of the request (if able to be determined)
-        :param response_time: the amount of time it took to respond to the request
+        :param response_time: the amount of time in milliseconds it took to respond to the request
         :param response_size: the size of the response
         :param response_status_code: the status code of the response
         :param response_exception: the exception that occurred (if any)
