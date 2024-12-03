@@ -12,7 +12,7 @@ if t.TYPE_CHECKING:
     from sqlalchemy.sql._typing import _DMLTableArgument
 
 
-class SQLORMTrafficMixin:
+class SQLORMModelMixin:
     """
     A mixin for use with ORM SQLAlchemy / Flask-SQLAlchemy models.
 
@@ -26,7 +26,7 @@ class SQLORMTrafficMixin:
 
     ::
 
-        class MyTrafficModel(db.Model, ORMTrafficMixin):
+        class MyTrafficModel(db.Model, SQLORMModelMixin):
             __tablename__ = "my_traffic_table"
 
     *Defaults:*
