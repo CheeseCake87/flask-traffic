@@ -2,6 +2,7 @@ import typing as t
 from datetime import datetime
 from json import dumps, loads
 from pathlib import Path
+
 from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
@@ -40,8 +41,6 @@ class JSONStore:
 
         else:
             self.log_policy = log_policy
-
-        print(self.log_policy)
 
     def setup(self, traffic_instance: "Traffic") -> None:
         """
