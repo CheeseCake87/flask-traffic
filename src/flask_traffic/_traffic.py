@@ -118,7 +118,7 @@ class Traffic:
                     message = str(exception)
 
                 for store in self.stores:
-                    if store.log_policy.response_exception:
+                    if not store.log_policy.skip_log_on_exception:
                         store.log(
                             request_date=datetime.now(),
                             request_method=request.method,

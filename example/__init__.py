@@ -12,18 +12,19 @@ traffic = Traffic()
 
 # create a log policy to pass the stores.
 # This is used to disable all, then enable what you want.
-log_policy = LogPolicy(
+log_policy = LogPolicy().set_from_false(
     request_browser=True,
     response_time=True,
     response_size=True,
 )
 
 only_on_exception = LogPolicy(
+    log_only_on_exception=True,
+).set_from_false(
     request_date=True,
     request_path=True,
     response_exception=True,
     response_time=True,
-    log_only_on_exception=True,
 )
 
 # create a csv file store
@@ -57,6 +58,7 @@ def create_app() -> Flask:
     # place the traffic extension below the db.init_app(app) line,
     # this will pick up th db.session automatically from db.init_app(app)
     traffic.init_app(app, stores=[json_store, csv_store, sqlite_store, orm_store])
+
     # You can add multiple stores at once, and they will all log data
     # based on the log policy
 

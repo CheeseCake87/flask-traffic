@@ -87,21 +87,7 @@ class SQLORMStore:
         if log_policy is None:
             from .._log_policy import LogPolicy
 
-            self.log_policy = LogPolicy(
-                response_time=True,
-                request_date=True,
-                request_method=True,
-                response_size=True,
-                response_status_code=True,
-                request_path=True,
-                request_user_agent=True,
-                request_remote_address=True,
-                response_exception=True,
-                request_referrer=True,
-                request_browser=True,
-                request_platform=True,
-                response_mimetype=True,
-            )
+            self.log_policy = LogPolicy()
 
         self.model = model
         self.db_session = db_session
@@ -167,6 +153,9 @@ class SQLORMStore:
         data = {}
 
         for attr, attr_val in self.log_policy.__dict__.items():
+            if attr == "skip_log_on_exception":
+                continue
+
             if attr == "log_only_on_exception":
                 continue
 
