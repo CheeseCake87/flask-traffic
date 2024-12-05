@@ -1,6 +1,12 @@
-## Version 0.3.0
+## Version -.-.-
 
 Unreleased
+
+---
+
+## Version 0.3.0
+
+Released 2024-12-05
 
 - bug fixe to LogPolicy.
 - bug fix to datetime conversion in SQLStore.
