@@ -91,7 +91,29 @@ class Traffic:
         @self.app.after_request
         def traffic_after_request(response) -> Response:
             for store in self.stores:
-                if not store.log_policy.log_only_on_exception:
+
+                # If on_endpoints is set, only log requests to those endpoints
+                if store.log_policy.on_endpoints:
+                    if not request.endpoint in store.log_policy.on_endpoints:
+                        continue
+
+                # If skip_endpoints is set, do not log requests to those endpoints
+                if store.log_policy.skip_endpoints:
+                    if request.endpoint in store.log_policy.skip_endpoints:
+                        continue
+
+                # If on_status_codes is set, only log requests with those status codes
+                if store.log_policy.on_status_codes:
+                    if not response.status_code in store.log_policy.on_status_codes:
+                        continue
+
+                # If skip_status_codes is set, do not log requests with those status codes
+                if store.log_policy.skip_status_codes:
+                    if response.status_code in store.log_policy.skip_status_codes:
+                        continue
+
+                # If only_on_exception is set, skip the log here. See teardown_request below
+                if not store.log_policy.only_on_exception:
                     store.log(
                         request_date=datetime.now(),
                         request_method=request.method,
@@ -115,13 +137,17 @@ class Traffic:
         @self.app.teardown_request
         def traffic_teardown_request(exception: t.Any) -> None:
             if exception:
+
+                # attempt to pull the __repr__ of the exception
                 try:
                     message = exception.__repr__()
                 except AttributeError:
                     message = str(exception)
 
                 for store in self.stores:
-                    if not store.log_policy.skip_log_on_exception:
+
+                    # If skip_on_exception is set, skip the log here
+                    if not store.log_policy.skip_on_exception:
                         store.log(
                             request_date=datetime.now(),
                             request_method=request.method,

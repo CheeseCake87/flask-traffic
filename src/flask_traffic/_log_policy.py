@@ -1,3 +1,6 @@
+from typing import Optional, Iterable
+
+
 class LogPolicy:
     """
     The LogPolicy class is used to define what data should be logged
@@ -6,31 +9,41 @@ class LogPolicy:
     If a LogPolicy is not passed to a store, one is created and all attributes
     are set to True.
     """
-    request_date: bool = True
-    request_method: bool = True
-    request_path: bool = True
-    request_remote_address: bool = True
-    request_referrer: bool = True
-    request_user_agent: bool = True
-    request_browser: bool = True
-    request_platform: bool = True
+    request_date: bool
+    request_method: bool
+    request_path: bool
+    request_remote_address: bool
+    request_referrer: bool
+    request_user_agent: bool
+    request_browser: bool
+    request_platform: bool
 
-    response_time: bool = True
-    response_size: bool = True
-    response_status_code: bool = True
-    response_exception: bool = True
-    response_mimetype: bool = True
+    response_time: bool
+    response_size: bool
+    response_status_code: bool
+    response_exception: bool
+    response_mimetype: bool
 
-    log_only_on_exception: bool = False
-    skip_log_on_exception: bool = False
+    on_endpoints: Iterable
+    skip_endpoints: Iterable
+
+    on_status_codes: Iterable
+    skip_status_codes: Iterable
+
+    only_on_exception: bool
+    skip_on_exception: bool
 
     def __repr__(self) -> str:
         return f"<LogPolicy {self.__dict__}>"
 
     def __init__(
         self,
-        log_only_on_exception: bool = False,
-        skip_log_on_exception: bool = False,
+        on_endpoints: Optional[Iterable[str]] = None,
+        skip_endpoints: Optional[Iterable[str]] = None,
+        on_status_codes: Optional[Iterable[str]] = None,
+        skip_status_codes: Optional[Iterable[str]] = None,
+        only_on_exception: bool = False,
+        skip_on_exception: bool = False,
     ) -> None:
         """
         Create a new LogPolicy instance.
@@ -63,11 +76,21 @@ class LogPolicy:
             response_exception = True
             response_mimetype = True
 
-            log_only_on_exception = False
-            skip_log_on_exception = False
+            on_endpoints = None (disabled)
+            skip_endpoints = None (disabled)
 
-        :param log_only_on_exception: only create a log entry if an exception is raised during the request if True
-        :param skip_log_on_exception: do not create a log entry if an exception is raised during the request if True
+            on_status_codes = None (disabled)
+            skip_status_codes = None (disabled)
+
+            only_on_exception = False
+            skip_on_exception = False
+
+        :param on_endpoints: only log requests to these endpoints
+        :param skip_endpoints: do not log requests to these endpoints
+        :param on_status_codes: only log requests with these status codes
+        :param skip_status_codes: do not log requests with these status codes
+        :param only_on_exception: only create a log entry if an exception is raised during the request if True
+        :param skip_on_exception: do not create a log entry if an exception is raised during the request if True
         """
 
         self.request_date = True
@@ -85,9 +108,31 @@ class LogPolicy:
         self.response_exception = True
         self.response_mimetype = True
 
-        self.log_only_on_exception = log_only_on_exception
-        self.skip_log_on_exception = skip_log_on_exception
+        # Endpoints
+        if on_endpoints is None:
+            self.on_endpoints = set()
+        else:
+            self.on_endpoints = on_endpoints
 
+        if skip_endpoints is None:
+            self.skip_endpoints = set()
+        else:
+            self.skip_endpoints = skip_endpoints
+
+        # Status Codes
+        if on_status_codes is None:
+            self.on_status_codes = set()
+        else:
+            self.on_status_codes = on_status_codes
+
+        if skip_status_codes is None:
+            self.skip_status_codes = set()
+        else:
+            self.skip_status_codes = skip_status_codes
+
+
+        self.only_on_exception = only_on_exception
+        self.skip_on_exception = skip_on_exception
 
     def set_from_true(
         self,
@@ -194,6 +239,3 @@ class LogPolicy:
         self.response_mimetype = response_mimetype
 
         return self
-
-    def __repr__(self):
-        return f"<LogPolicy {self.__dict__}>"
