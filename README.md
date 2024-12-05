@@ -2,7 +2,9 @@
 
 Store and monitor site traffic.
 
-`pip install flask-traffic`
+```bash
+pip install flask-traffic
+```
 
 <!-- TOC -->
 * [flask-traffic 🚦](#flask-traffic-)
