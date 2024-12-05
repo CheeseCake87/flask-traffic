@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 from .._log_policy import LogPolicy
+from .._globals import IGNORE_LOCALS
 
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
@@ -110,10 +111,7 @@ class CSVStore:
         data = {}
 
         for attr, attr_val in self.log_policy.__dict__.items():
-            if attr == "skip_log_on_exception":
-                continue
-
-            if attr == "log_only_on_exception":
+            if attr in IGNORE_LOCALS:
                 continue
 
             if attr_val:

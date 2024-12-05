@@ -4,6 +4,7 @@ from pathlib import Path
 
 from sqlalchemy import create_engine, Table, Column, String, Integer, DateTime, MetaData
 
+from .._globals import IGNORE_LOCALS
 from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
@@ -189,10 +190,7 @@ class SQLStore:
         data = {}
 
         for attr, attr_val in self.log_policy.__dict__.items():
-            if attr == "skip_log_on_exception":
-                continue
-
-            if attr == "log_only_on_exception":
+            if attr in IGNORE_LOCALS:
                 continue
 
             if attr_val:
