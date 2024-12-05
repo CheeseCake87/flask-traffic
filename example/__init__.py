@@ -2,8 +2,7 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 from flask_traffic import Traffic, LogPolicy
-from flask_traffic.stores import JSONStore, CSVStore, SQLStore, SQLORMStore, \
-    SQLORMModelMixin
+from flask_traffic.stores import JSONStore, SQLStore, SQLORMModelMixin
 
 # create an instance of the flask_sqlalchemy extension
 db = SQLAlchemy()
@@ -12,14 +11,19 @@ traffic = Traffic()
 
 # create a log policy to pass the stores.
 # This is used to disable all, then enable what you want.
-log_policy = LogPolicy().set_from_false(
+log_policy = LogPolicy(
+    skip_endpoints=("static",),
+    skip_on_exception=True,
+).set_from_false(
     request_browser=True,
     response_time=True,
     response_size=True,
+    response_status_code=True,
+    request_path=True,
 )
 
 only_on_exception = LogPolicy(
-    log_only_on_exception=True,
+    only_on_exception=True,
 ).set_from_false(
     request_date=True,
     request_path=True,
@@ -28,10 +32,12 @@ only_on_exception = LogPolicy(
 )
 
 # create a csv file store
-csv_store = CSVStore(log_policy=log_policy)
+# csv_store = CSVStore(log_policy=log_policy)
 
 # create a sqlite store
+# sqlite_store = SQLStore(log_policy=log_policy)
 sqlite_store = SQLStore(log_policy=log_policy)
+
 
 # create a JSON store
 json_store = JSONStore(log_policy=only_on_exception)
@@ -43,7 +49,7 @@ class ModelModel(db.Model, SQLORMModelMixin):
 
 
 # create an ORM store and pass the above model
-orm_store = SQLORMStore(model=ModelModel)
+# orm_store = SQLORMStore(model=ModelModel)
 
 
 def create_app() -> Flask:
@@ -57,14 +63,19 @@ def create_app() -> Flask:
 
     # place the traffic extension below the db.init_app(app) line,
     # this will pick up th db.session automatically from db.init_app(app)
-    traffic.init_app(app, stores=[json_store, csv_store, sqlite_store, orm_store])
+    # traffic.init_app(app, stores=[json_store, csv_store, sqlite_store, orm_store])
+    traffic.init_app(app, stores=[sqlite_store])
 
     # You can add multiple stores at once, and they will all log data
     # based on the log policy
 
-    # This will create an exemption, and be stored in the json_store
     @app.route("/")
     def index():
+        return render_template("index.html")
+
+    # This will create an exemption, and be stored in the json_store
+    @app.route("/")
+    def index1():
         return render_template("index1.html")
 
     return app
