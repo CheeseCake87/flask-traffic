@@ -8,7 +8,7 @@ Unreleased
 
 Released 2024-12-05
 
-- bug fixe to LogPolicy.
+- bug fix to LogPolicy.
 - bug fix to datetime conversion in SQLStore.
 - LogPolicy now has 'on_endpoints', 'skip_endpoints', 'on_status_codes',
   'skip_status_codes' attrs to skip or scope.
