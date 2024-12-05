@@ -1,5 +1,9 @@
 # flask-traffic 🚦
 
+[![PyPI version](https://img.shields.io/pypi/v/flask-traffic)](https://pypi.org/project/flask-traffic/)
+[![License](https://img.shields.io/github/license/CheeseCake87/flask-traffic)](https://raw.githubusercontent.com/CheeseCake87/flask-traffic/master/LICENSE)
+![black](https://img.shields.io/badge/code%20style-black-000000.svg)
+
 Store and monitor site traffic.
 
 ```bash
