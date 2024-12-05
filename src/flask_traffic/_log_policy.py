@@ -3,9 +3,6 @@ class LogPolicy:
     The LogPolicy class is used to define what data should be logged
     when a request is made to the Flask app.
 
-    Every attribute defaults to False, so that you can enable only the
-    data you want to log.
-
     If a LogPolicy is not passed to a store, one is created and all attributes
     are set to True.
     """
