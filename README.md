@@ -123,8 +123,13 @@ to store.
 `set_from_false` will allow you to enable certain attributes to be stored.
 
 If a store is created without a log policy passed in, one is created with all log
-attributes set to `True`, and `log_only_on_exception` and `skip_log_on_exception` are
-set to `False`.
+attributes set to `True`.
+
+`only_on_exception`, and `skip_on_exception` are set to `False`.
+
+`on_endpoints`, `skip_endpoints`, `on_status_codes`, and `skip_status_codes` are
+used to scope or skip logging based on the endpoint or status code. These are disabled
+by default.
 
 Here's an example of the `LogPolicy` class only storing the date and request path:
 
