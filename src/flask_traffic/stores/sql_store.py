@@ -196,10 +196,6 @@ class SQLStore:
                 continue
 
             if attr_val:
-                if isinstance(locals()[attr], datetime):
-                    data[attr] = locals()[attr].isoformat()
-                    continue
-
                 data[attr] = locals()[attr]
 
             else:
