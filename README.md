@@ -213,11 +213,11 @@ def create_app():
     traffic.init_app(
         app, stores=[
             JSONStore(
-                log_policy=LogPolicy(log_only_on_exception=True)
+                log_policy=LogPolicy(only_on_exception=True)
             ),
             SQLORMStore(
                 Traffic,
-                log_policy=LogPolicy(skip_log_on_exception=True)
+                log_policy=LogPolicy(skip_on_exception=True)
             )
         ])
 
