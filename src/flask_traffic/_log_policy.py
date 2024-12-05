@@ -70,8 +70,24 @@ class LogPolicy:
         :param skip_log_on_exception: do not create a log entry if an exception is raised during the request if True
         """
 
+        self.request_date = True
+        self.request_method = True
+        self.request_path = True
+        self.request_remote_address = True
+        self.request_referrer = True
+        self.request_user_agent = True
+        self.request_browser = True
+        self.request_platform = True
+
+        self.response_time = True
+        self.response_size = True
+        self.response_status_code = True
+        self.response_exception = True
+        self.response_mimetype = True
+
         self.log_only_on_exception = log_only_on_exception
         self.skip_log_on_exception = skip_log_on_exception
+
 
     def set_from_true(
         self,
