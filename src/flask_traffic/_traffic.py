@@ -14,6 +14,7 @@ class Traffic:
     The Traffic class registers the extension with the Flask app and
     sets up any passed in stores.
     """
+
     app: Flask
     app_instance_folder: t.Optional[Path]
 
@@ -91,7 +92,6 @@ class Traffic:
         @self.app.after_request
         def traffic_after_request(response) -> Response:
             for store in self.stores:
-
                 # If on_endpoints is set, only log requests to those endpoints
                 if store.log_policy.on_endpoints:
                     if not request.endpoint in store.log_policy.on_endpoints:
@@ -137,7 +137,6 @@ class Traffic:
         @self.app.teardown_request
         def traffic_teardown_request(exception: t.Any) -> None:
             if exception:
-
                 # attempt to pull the __repr__ of the exception
                 try:
                     message = exception.__repr__()
@@ -145,7 +144,6 @@ class Traffic:
                     message = str(exception)
 
                 for store in self.stores:
-
                     # If skip_on_exception is set, skip the log here
                     if not store.log_policy.skip_on_exception:
                         store.log(

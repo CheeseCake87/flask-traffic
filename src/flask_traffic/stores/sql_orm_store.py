@@ -51,6 +51,7 @@ class SQLORMModelMixin:
         response_mimetype = Column(String, nullable=True)
 
     """
+
     __tablename__ = "_traffic_"
     traffic_id = Column(Integer, primary_key=True)
     request_date = Column(DateTime, nullable=True)

@@ -10,6 +10,7 @@ class StoreProtocol(t.Protocol):
     """
     The protocol to follow for a valid *Store.
     """
+
     log_policy: "LogPolicy"
 
     def setup(self, traffic_instance: "Traffic") -> None: ...

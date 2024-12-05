@@ -9,6 +9,7 @@ class LogPolicy:
     If a LogPolicy is not passed to a store, one is created and all attributes
     are set to True.
     """
+
     request_date: bool
     request_method: bool
     request_path: bool
@@ -129,7 +130,6 @@ class LogPolicy:
             self.skip_status_codes = set()
         else:
             self.skip_status_codes = skip_status_codes
-
 
         self.only_on_exception = only_on_exception
         self.skip_on_exception = skip_on_exception

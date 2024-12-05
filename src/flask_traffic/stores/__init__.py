@@ -7,5 +7,4 @@ from .json_store import JSONStore
 from .sql_orm_store import SQLORMStore, SQLORMModelMixin
 from .sql_store import SQLStore
 
-__all__ = ["JSONStore", "CSVStore", "SQLStore", "SQLORMStore",
-           "SQLORMModelMixin"]
+__all__ = ["JSONStore", "CSVStore", "SQLStore", "SQLORMStore", "SQLORMModelMixin"]
