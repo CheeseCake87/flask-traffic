@@ -69,48 +69,6 @@ def create_app():
 ...
 ```
 
-## Stores
-
-### JSONStore
-
-This store saves traffic data in a JSON file. The file is created in the
-`instance` folder of the Flask app by default.
-
-### CSVStore
-
-This store saves traffic data in a CSV file. The file is created in the
-`instance` folder of the Flask app by default.
-
-### SQLStore
-
-This store saves traffic data in a SQL type database. It defaults to using SQLite
-which is created in the `instance` folder of the Flask app by default.
-
-You can specify a database URL, or pass in an already created SQLAlchemy engine.
-
-This store is used if you want to store traffic data in a SQL type database.
-
-### SQLORMStore
-
-This is an ORM version of the `SQLStore`. It is designed to integrate with an existing
-SQLAlchemy ORM environment like Flask-SQLAlchemy.
-
-#### SQLORMModelMixin
-
-This mixin is used to set the correct table columns for the `SQLORMStore`.
-
-Example:
-
-```python
-from flask_traffic.stores import SQLORMModelMixin
-
-from app import db
-
-
-class Traffic(db.Model, SQLORMModelMixin):
-    pass
-```
-
 ## The `LogPolicy` class
 
 `from flask_traffic import LogPolicy`
@@ -173,6 +131,83 @@ log_policy = LogPolicy().set_from_true(
 )
 
 json_store = JSONStore(log_policy=log_policy)
+```
+
+## Stores
+
+### JSONStore
+
+This store saves traffic data in a JSON file. The file is created in the
+`instance` folder of the Flask app by default.
+
+### CSVStore
+
+This store saves traffic data in a CSV file. The file is created in the
+`instance` folder of the Flask app by default.
+
+### SQLStore
+
+This store saves traffic data in a SQL type database. It defaults to using SQLite
+which is created in the `instance` folder of the Flask app by default.
+
+You can specify a database URL, or pass in an already created SQLAlchemy engine.
+
+This store is used if you want to store traffic data in a SQL type database.
+
+### SQLORMStore
+
+This is an ORM version of the `SQLStore`. It is designed to integrate with an existing
+SQLAlchemy ORM environment like Flask-SQLAlchemy.
+
+#### SQLORMModelMixin
+
+This mixin is used to set the correct table columns for the `SQLORMStore`.
+
+Example:
+
+```python
+from flask_traffic.stores import SQLORMModelMixin
+
+from app import db
+
+
+class Traffic(db.Model, SQLORMModelMixin):
+    pass
+```
+
+## Reading store data
+
+Each store has a `read` method that will return the data in the store as a
+list of dictionaries.
+
+Here's an example of reading the data from a `CSVStore`:
+
+```python
+@app.route("/read-csv")
+def read_csv():
+    return csv_store.read()
+```
+
+This will return the data as JSON.
+
+You can also override the `read` method to change the default,
+or add more methods of course.
+
+here's an example of overriding the `read` method in a `SQLStore` to only return data
+where the response status code is 200:
+
+```python
+class MyStore(SQLStore):
+    def read(self):
+        with self.database_engine.connect() as connection:
+            results = connection.execute(
+                self.database_log_table.select().order_by(
+                    self.database_log_table.c.traffic_id.desc()
+                ).where(
+                    self.database_log_table.c.response_status_code == 200
+                )
+            )
+            return [row._asdict() for row in results.fetchall()]
 ```
 
 ## Bigger Examples
