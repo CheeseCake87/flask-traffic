@@ -2,6 +2,12 @@
 
 Unreleased
 
+---
+
+## Version 0.4.0
+
+Released 2024-12-07
+
 - add `read` method to all stores.
 - update example app to include `read` method.
 
