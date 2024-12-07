@@ -3,8 +3,8 @@ from datetime import datetime
 from json import dumps, loads
 from pathlib import Path
 
-from .._log_policy import LogPolicy
 from .._globals import IGNORE_LOCALS
+from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
@@ -133,3 +133,21 @@ class JSONStore:
 
         jsond.append(data)
         self.filepath.write_text(dumps(jsond, indent=0))
+
+    def read(self) -> t.List[t.Dict[str, t.Any]]:
+        """
+        Read the JSON file and return the contents.
+
+        :return: the contents of the JSON file
+        """
+        file_contents = self.filepath.read_text()
+
+        if file_contents == "":
+            return []
+
+        logs = loads(file_contents)
+
+        if isinstance(logs, list):
+            return list(reversed(logs))
+
+        return []

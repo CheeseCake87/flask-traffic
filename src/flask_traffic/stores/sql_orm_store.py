@@ -2,10 +2,10 @@ import typing as t
 from datetime import datetime
 
 from sqlalchemy import Column, String, Integer, DateTime
-from sqlalchemy import insert
+from sqlalchemy import insert, select, desc
 
-from .._log_policy import LogPolicy
 from .._globals import IGNORE_LOCALS
+from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
@@ -169,3 +169,35 @@ class SQLORMStore:
 
         self.db_session.execute(insert(self.model).values(data))
         self.db_session.commit()
+
+    def read(self):
+        if hasattr(self.model, "traffic_id"):
+            results = self.db_session.execute(
+                select(self.model).order_by(desc(self.model.traffic_id))
+            )
+
+            if results:
+                return [
+                    {
+                        "request_date": getattr(row, "request_date", None),
+                        "request_method": getattr(row, "request_method", None),
+                        "request_path": getattr(row, "request_path", None),
+                        "request_remote_address": getattr(
+                            row, "request_remote_address", None
+                        ),
+                        "request_referrer": getattr(row, "request_referrer", None),
+                        "request_user_agent": getattr(row, "request_user_agent", None),
+                        "request_browser": getattr(row, "request_browser", None),
+                        "request_platform": getattr(row, "request_platform", None),
+                        "response_time": getattr(row, "response_time", None),
+                        "response_size": getattr(row, "response_size", None),
+                        "response_status_code": getattr(
+                            row, "response_status_code", None
+                        ),
+                        "response_exception": getattr(row, "response_exception", None),
+                        "response_mimetype": getattr(row, "response_mimetype", None),
+                    }
+                    for row in results.scalars().all()
+                ]
+
+            return []

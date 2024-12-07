@@ -3,8 +3,8 @@ import typing as t
 from datetime import datetime
 from pathlib import Path
 
-from .._log_policy import LogPolicy
 from .._globals import IGNORE_LOCALS
+from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
@@ -132,3 +132,14 @@ class CSVStore:
                 writer.writeheader()
 
             writer.writerow(data)
+
+    def read(self) -> t.List[t.Dict[str, t.Any]]:
+        """
+        Read the CSV file and return the data as a list of dictionaries.
+
+        :return: the data as a list of dictionaries
+        """
+        with open(self.filepath, "r") as f:
+            reader = csv.DictReader(f)
+
+            return list(reversed(list(reader)))

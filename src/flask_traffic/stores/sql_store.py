@@ -202,3 +202,13 @@ class SQLStore:
         with self.database_engine.connect() as connection:
             connection.execute(self.database_log_table.insert().values(data))
             connection.commit()
+
+    def read(self):
+        with self.database_engine.connect() as connection:
+            results = connection.execute(
+                self.database_log_table.select().order_by(
+                    self.database_log_table.c.traffic_id.desc()
+                )
+            )
+
+            return [row._asdict() for row in results.fetchall()]
