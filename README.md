@@ -13,13 +13,14 @@ pip install flask-traffic
 <!-- TOC -->
 * [flask-traffic 🚦](#flask-traffic-)
   * [Minimal Example](#minimal-example)
+  * [The `LogPolicy` class](#the-logpolicy-class)
   * [Stores](#stores)
     * [JSONStore](#jsonstore)
     * [CSVStore](#csvstore)
     * [SQLStore](#sqlstore)
     * [SQLORMStore](#sqlormstore)
       * [SQLORMModelMixin](#sqlormmodelmixin)
-  * [The `LogPolicy` class](#the-logpolicy-class)
+  * [Reading store data](#reading-store-data)
   * [Bigger Examples](#bigger-examples)
     * [`SQLORMStore` with Flask-SQLAlchemy, `JSONStore` for exceptions](#sqlormstore-with-flask-sqlalchemy-jsonstore-for-exceptions)
     * [`CSVStore` only IP Addresses](#csvstore-only-ip-addresses)
@@ -38,11 +39,17 @@ traffic = Traffic()
 def create_app():
     app = Flask(__name__)
 
-    traffic.init_app(app, stores=JSONStore())
+    json_store = JSONStore()
+
+    traffic.init_app(app, stores=json_store)
 
     @app.route('/')
     def index():
         return 'Hello, World!'
+
+    @app.route('/traffic')
+    def traffic():
+        return json_store.read()
 
     return app
 ```

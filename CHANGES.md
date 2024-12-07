@@ -4,6 +4,14 @@ Unreleased
 
 ---
 
+## Version 0.4.1
+
+Released 2024-12-07
+
+- update TOC and minimal example on readme.
+
+---
+
 ## Version 0.4.0
 
 Released 2024-12-07
