@@ -2,6 +2,9 @@
 
 Unreleased
 
+- add `read` method to all stores.
+- update example app to include `read` method.
+
 ---
 
 ## Version 0.3.0
