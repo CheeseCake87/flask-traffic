@@ -117,7 +117,9 @@ class Traffic:
                     store.log(
                         request_date=datetime.now(),
                         request_method=request.method,
+                        request_host_url=request.host_url,
                         request_path=request.path,
+                        request_endpoint=request.endpoint,
                         request_user_agent=request.user_agent.string,
                         request_remote_address=request.remote_addr,
                         request_referrer=request.referrer,
@@ -149,7 +151,9 @@ class Traffic:
                         store.log(
                             request_date=datetime.now(),
                             request_method=request.method,
+                            request_host_url=request.host_url,
                             request_path=request.path,
+                            request_endpoint=request.endpoint,
                             request_user_agent=request.user_agent.string,
                             request_remote_address=request.remote_addr,
                             request_referrer=request.referrer,

@@ -19,6 +19,8 @@ class StoreProtocol(t.Protocol):
         self,
         request_date: t.Optional[datetime] = None,
         request_method: t.Optional[str] = None,
+        request_endpoint: t.Optional[str] = None,
+        request_host_url: t.Optional[str] = None,
         request_path: t.Optional[str] = None,
         request_remote_address: t.Optional[str] = None,
         request_referrer: t.Optional[str] = None,

@@ -121,7 +121,9 @@ class SQLStore:
             Column("traffic_id", Integer, primary_key=True),
             Column("request_date", DateTime, nullable=True),
             Column("request_method", String, nullable=True),
+            Column("request_host_url", String, nullable=True),
             Column("request_path", String, nullable=True),
+            Column("request_endpoint", String, nullable=True),
             Column("request_remote_address", String, nullable=True),
             Column("request_referrer", String, nullable=True),
             Column("request_user_agent", String, nullable=True),
@@ -157,7 +159,9 @@ class SQLStore:
         self,
         request_date: t.Optional[datetime] = None,
         request_method: t.Optional[str] = None,
+        request_host_url: t.Optional[str] = None,
         request_path: t.Optional[str] = None,
+        request_endpoint: t.Optional[str] = None,
         request_remote_address: t.Optional[str] = None,
         request_referrer: t.Optional[str] = None,
         request_user_agent: t.Optional[str] = None,
@@ -174,7 +178,9 @@ class SQLStore:
 
         :param request_date: the date and time of the request
         :param request_method: the HTTP method of the request
+        :param request_host_url: the host URL of the request
         :param request_path: the path of the request
+        :param request_endpoint: the matched endpoint of the request
         :param request_remote_address: the remote address of the request
         :param request_referrer: the referrer of the request
         :param request_user_agent: the user agent of the request

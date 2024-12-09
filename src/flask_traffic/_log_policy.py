@@ -12,7 +12,9 @@ class LogPolicy:
 
     request_date: bool
     request_method: bool
+    request_host_url: bool
     request_path: bool
+    request_endpoint: bool
     request_remote_address: bool
     request_referrer: bool
     request_user_agent: bool
@@ -64,7 +66,9 @@ class LogPolicy:
         ::
 
             request_method = True
+            request_host_url = True
             request_path = True
+            request_endpoint = True
             request_remote_address = True
             request_referrer = True
             request_user_agent = True
@@ -96,7 +100,9 @@ class LogPolicy:
 
         self.request_date = True
         self.request_method = True
+        self.request_host_url = True
         self.request_path = True
+        self.request_endpoint = True
         self.request_remote_address = True
         self.request_referrer = True
         self.request_user_agent = True
@@ -138,7 +144,9 @@ class LogPolicy:
         self,
         request_date: bool = True,
         request_method: bool = True,
+        request_host_url: bool = True,
         request_path: bool = True,
+        request_endpoint: bool = True,
         request_remote_address: bool = True,
         request_referrer: bool = True,
         request_user_agent: bool = True,
@@ -157,7 +165,9 @@ class LogPolicy:
 
         :param request_date: the date and time of the request
         :param request_method: the HTTP method of the request
+        :param request_host_url: the host URL of the request
         :param request_path: the path of the request
+        :param request_endpoint: the matched endpoint of the request
         :param request_remote_address: the remote address of the request
         :param request_referrer: the referrer of the request
         :param request_user_agent: the user agent of the request
@@ -172,7 +182,9 @@ class LogPolicy:
         """
         self.request_date = request_date
         self.request_method = request_method
+        self.request_host_url = request_host_url
         self.request_path = request_path
+        self.request_endpoint = request_endpoint
         self.request_remote_address = request_remote_address
         self.request_referrer = request_referrer
         self.request_user_agent = request_user_agent
@@ -191,7 +203,9 @@ class LogPolicy:
         self,
         request_date: bool = False,
         request_method: bool = False,
+        request_host_url: bool = False,
         request_path: bool = False,
+        request_endpoint: bool = False,
         request_remote_address: bool = False,
         request_referrer: bool = False,
         request_user_agent: bool = False,
@@ -210,7 +224,9 @@ class LogPolicy:
 
         :param request_date: the date and time of the request
         :param request_method: the HTTP method of the request
+        :param request_host_url: the host URL of the request
         :param request_path: the path of the request
+        :param request_endpoint: the matched endpoint of the request
         :param request_remote_address: the remote address of the request
         :param request_referrer: the referrer of the request
         :param request_user_agent: the user agent of the request
@@ -225,7 +241,9 @@ class LogPolicy:
         """
         self.request_date = request_date
         self.request_method = request_method
+        self.request_host_url = request_host_url
         self.request_path = request_path
+        self.request_endpoint = request_endpoint
         self.request_remote_address = request_remote_address
         self.request_referrer = request_referrer
         self.request_user_agent = request_user_agent

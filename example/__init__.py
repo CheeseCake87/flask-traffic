@@ -34,6 +34,7 @@ only_on_exception = LogPolicy(
     only_on_exception=True,
 ).set_from_false(
     request_date=True,
+    request_host_url=True,
     request_path=True,
     response_exception=True,
     response_time=True,
@@ -55,10 +56,12 @@ sqlorm_store = SQLORMStore(model=ModelModel)
 json_exception_store = JSONStore(
     filename="exception.json", log_policy=only_on_exception)
 
+
 # create a custom store and override the read method
 class MyStore(JSONStore):
     def read(self):
         return "This is a custom store"
+
 
 store_read_override = MyStore(filename="custom.json", log_policy=log_policy)
 

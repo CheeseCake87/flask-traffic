@@ -38,7 +38,10 @@ class SQLORMModelMixin:
         traffic_id = Column(Integer, primary_key=True)
         request_date = Column(DateTime, nullable=True)
         request_method = Column(String, nullable=True)
+        request_host_url = Column(String, nullable=True)
         request_path = Column(String, nullable=True)
+        request_endpoint = Column(String, nullable=True)
+
         request_remote_address = Column(String, nullable=True)
         request_referrer = Column(String, nullable=True)
         request_user_agent = Column(String, nullable=True)
@@ -56,7 +59,9 @@ class SQLORMModelMixin:
     traffic_id = Column(Integer, primary_key=True)
     request_date = Column(DateTime, nullable=True)
     request_method = Column(String, nullable=True)
+    request_host_url = Column(String, nullable=True)
     request_path = Column(String, nullable=True)
+    request_endpoint = Column(String, nullable=True)
     request_remote_address = Column(String, nullable=True)
     request_referrer = Column(String, nullable=True)
     request_user_agent = Column(String, nullable=True)
@@ -125,7 +130,9 @@ class SQLORMStore:
         self,
         request_date: t.Optional[datetime] = None,
         request_method: t.Optional[str] = None,
+        request_host_url: t.Optional[str] = None,
         request_path: t.Optional[str] = None,
+        request_endpoint: t.Optional[str] = None,
         request_remote_address: t.Optional[str] = None,
         request_referrer: t.Optional[str] = None,
         request_user_agent: t.Optional[str] = None,
@@ -142,7 +149,9 @@ class SQLORMStore:
 
         :param request_date: the date and time of the request
         :param request_method: the HTTP method of the request
+        :param request_host_url: the host URL of the request
         :param request_path: the path of the request
+        :param request_endpoint: the matched endpoint of the request
         :param request_remote_address: the remote address of the request
         :param request_referrer: the referrer of the request
         :param request_user_agent: the user agent of the request
@@ -181,7 +190,9 @@ class SQLORMStore:
                     {
                         "request_date": getattr(row, "request_date", None),
                         "request_method": getattr(row, "request_method", None),
+                        "request_host_url": getattr(row, "request_host_url", None),
                         "request_path": getattr(row, "request_path", None),
+                        "request_endpoint": getattr(row, "request_endpoint", None),
                         "request_remote_address": getattr(
                             row, "request_remote_address", None
                         ),

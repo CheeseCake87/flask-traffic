@@ -4,6 +4,15 @@ Unreleased
 
 ---
 
+## Version 0.5.0
+
+Released 2024-12-079
+
+- add `host_url` to logging
+- add `endpoint` to logging
+
+---
+
 ## Version 0.4.1
 
 Released 2024-12-07
