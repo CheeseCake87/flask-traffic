@@ -9,16 +9,6 @@ Store and monitor site traffic.
 ```bash
 pip install flask-traffic
 
-# extras:
-
-# SQLStore
-pip install flask-traffic[sqlalchemy]
-
-# SQLStore, SQLORMStore
-pip install flask-traffic[flask-sqlalchemy]
-
-# RedisStore
-pip install flask-traffic[redis]
 ```
 
 <!-- TOC -->
@@ -44,18 +34,24 @@ pip install flask-traffic[redis]
 
 ```bash
 pip install sqlalchemy
+# or
+pip install "flask-traffic[sqlalchemy]"
 ```
 
-**SQLORMStore** requires `sqlalchmey` and recommends `flask-sqlalchemy`
+**SQLORMStore** requires `sqlalchmey` but recommends `flask-sqlalchemy`
 
 ```bash
 pip install flask-sqlalchemy
+# or
+pip install "flask-traffic[flask-sqlalchemy]"
 ```
 
 **RedisStore** requires `redis`
 
 ```bash
 pip install redis
+# or
+pip install "flask-traffic[redis]"
 ```
 
 ## Minimal Example
