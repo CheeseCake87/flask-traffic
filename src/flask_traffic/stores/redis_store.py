@@ -38,6 +38,7 @@ class RedisStore:
         Create a new RedisStore instance.
 
         :param redis_host: redis host to connect to
+        :param event_name: redis stream name to use for logging traffic data.
         :param redis_password: redis password for authentication
         :param redis_port: redis port on which redis instance is listening on
         :param log_policy: the log policy to use (defaults to log everything if not provided)
