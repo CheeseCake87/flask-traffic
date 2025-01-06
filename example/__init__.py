@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from flask_traffic import Traffic, LogPolicy
 from flask_traffic.stores import JSONStore, CSVStore, SQLStore, SQLORMStore, \
-    SQLORMModelMixin
+    SQLORMModelMixin, RedisStore
 
 # create an instance of the flask_sqlalchemy extension
 db = SQLAlchemy()
@@ -56,6 +56,14 @@ sqlorm_store = SQLORMStore(model=ModelModel)
 json_exception_store = JSONStore(
     filename="exception.json", log_policy=only_on_exception)
 
+# This example is configure to connect to a docker instance of redis
+redis_store = RedisStore(
+    redis_host="localhost",
+    event_name="traffic",
+    redis_port=8001,
+    log_policy=log_policy,
+)
+
 
 # create a custom store and override the read method
 class MyStore(JSONStore):
@@ -84,6 +92,7 @@ def create_app() -> Flask:
         json_store,
         sql_store,
         sqlorm_store,
+        redis_store,
         json_exception_store,
         store_read_override
     ])
@@ -118,6 +127,10 @@ def create_app() -> Flask:
     @app.route("/read-orm")
     def read_orm():
         return sqlorm_store.read()
+
+    @app.route("/read-redis")
+    def read_redis():
+        return redis_store.read()
 
     @app.route("/read-custom")
     def read_custom():
