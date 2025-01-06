@@ -25,6 +25,10 @@ filelock==3.16.1
     #   tox
     #   virtualenv
 flask==3.1.0
+    # via
+    #   -r requirements/dev.in
+    #   flask-sqlalchemy
+flask-sqlalchemy==3.1.1
     # via -r requirements/dev.in
 flit==3.10.1
     # via -r requirements/dev.in
@@ -77,10 +81,14 @@ pytest==8.3.4
     # via -r requirements/dev.in
 pyyaml==6.0.2
     # via pre-commit
+redis==5.2.1
+    # via -r requirements/dev.in
 requests==2.32.3
     # via flit
 ruff==0.8.1
     # via -r requirements/dev.in
+sqlalchemy==2.0.36
+    # via flask-sqlalchemy
 tomli-w==1.1.0
     # via flit
 tox==4.23.2
@@ -89,6 +97,7 @@ typing-extensions==4.12.2
     # via
     #   mypy
     #   pyright
+    #   sqlalchemy
 urllib3==2.2.3
     # via requests
 uv==0.5.5
