@@ -4,9 +4,20 @@ Unreleased
 
 ---
 
+## Version 0.6.0
+
+Released 2025-01-06
+
+- new store: RedisStore
+- removed sqlalchemy dependency
+- add exceptions for required packages not installed
+- add optional installation extras
+
+---
+
 ## Version 0.5.0
 
-Released 2024-12-079
+Released 2024-12-07
 
 - add `host_url` to logging
 - add `endpoint` to logging
