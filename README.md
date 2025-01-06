@@ -212,7 +212,7 @@ class Traffic(db.Model, SQLORMModelMixin):
 
 ### RedisStore
 
-This store saves traffic data in a Redis service instance.
+This store sends traffic data to a Redis event stream.
 
 ## Reading store data
 
