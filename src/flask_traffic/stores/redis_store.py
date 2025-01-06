@@ -115,12 +115,15 @@ class RedisStore:
                     data[attr] = locals()[attr].isoformat()
                     continue
 
+                if locals()[attr] is None:
+                    data[attr] = "None"
+                    continue
+
+                if not isinstance(locals()[attr], legal_types):
+                    data[attr] = "unknown"
                 else:
-                    if type(attr_val) not in legal_types:
-                        try:
-                            data[attr] = str(locals()[attr])
-                        except ValueError:
-                            data[attr] = "unknown"
+                    data[attr] = locals()[attr]
+
             else:
                 continue
 
@@ -139,7 +142,13 @@ class RedisStore:
         if len(data_stream) > 0:
             msg_stream = data_stream[0]
             messages = msg_stream[1]
+
             for msg in messages:
-                logs.append(msg)
+                logs.append(
+                    {
+                        key: (None if value == "None" else value)
+                        for key, value in msg[1].items()
+                    }
+                )
 
         return logs
