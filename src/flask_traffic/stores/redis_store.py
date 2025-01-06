@@ -1,7 +1,13 @@
 import typing as t
 from datetime import datetime
 
-from redis import Redis
+try:
+    from redis import Redis
+except ImportError:
+    raise ImportError(
+        "You're attempting to use a RedisStore but redis is not installed. "
+        "Please install it with `pip install redis`"
+    )
 
 from .._globals import IGNORE_LOCALS
 from .._log_policy import LogPolicy
