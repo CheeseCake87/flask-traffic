@@ -16,6 +16,8 @@ flit
 
 # typing + tests
 Flask
+flask-sqlalchemy
+redis
 mypy
 pyright
 pytest
