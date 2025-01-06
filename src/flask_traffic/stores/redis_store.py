@@ -102,6 +102,8 @@ class RedisStore:
         :param response_mimetype: the mimetype of the response
         :return:
         """
+        legal_types = (str, int, float, bytes)
+
         data = {}
 
         for attr, attr_val in self.log_policy.__dict__.items():
@@ -113,8 +115,12 @@ class RedisStore:
                     data[attr] = locals()[attr].isoformat()
                     continue
 
-                data[attr] = locals()[attr]
-
+                else:
+                    if type(attr_val) not in legal_types:
+                        try:
+                            data[attr] = str(locals()[attr])
+                        except ValueError:
+                            data[attr] = "unknown"
             else:
                 continue
 
