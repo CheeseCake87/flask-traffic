@@ -4,6 +4,14 @@ Unreleased
 
 ---
 
+## Version 0.6.1
+
+Released 2025-01-06
+
+- RedisStore.read now returns list in reverse (newest to the top)
+
+---
+
 ## Version 0.6.0
 
 Released 2025-01-06
