@@ -8,25 +8,7 @@ Store and monitor site traffic.
 
 ```bash
 pip install flask-traffic
-
 ```
-
-<!-- TOC -->
-* [flask-traffic 🚦](#flask-traffic-)
-  * [Minimal Example](#minimal-example)
-  * [The `LogPolicy` class](#the-logpolicy-class)
-  * [Stores](#stores)
-    * [JSONStore](#jsonstore)
-    * [CSVStore](#csvstore)
-    * [SQLStore](#sqlstore)
-    * [SQLORMStore](#sqlormstore)
-      * [SQLORMModelMixin](#sqlormmodelmixin)
-    * [RedisStore](#redisstore)
-  * [Reading store data](#reading-store-data)
-  * [Bigger Examples](#bigger-examples)
-    * [`SQLORMStore` with Flask-SQLAlchemy, `JSONStore` for exceptions](#sqlormstore-with-flask-sqlalchemy-jsonstore-for-exceptions)
-    * [`CSVStore` only IP Addresses](#csvstore-only-ip-addresses)
-<!-- TOC -->
 
 **🚨 Note:**
 
@@ -53,6 +35,24 @@ pip install redis
 # or
 pip install "flask-traffic[redis]"
 ```
+
+<!-- TOC -->
+* [flask-traffic 🚦](#flask-traffic-)
+  * [Minimal Example](#minimal-example)
+  * [The `LogPolicy` class](#the-logpolicy-class)
+  * [Stores](#stores)
+    * [JSONStore](#jsonstore)
+    * [CSVStore](#csvstore)
+    * [SQLStore](#sqlstore)
+    * [SQLORMStore](#sqlormstore)
+      * [SQLORMModelMixin](#sqlormmodelmixin)
+    * [RedisStore](#redisstore)
+  * [Reading store data](#reading-store-data)
+  * [Bigger Examples](#bigger-examples)
+    * [`SQLORMStore` with Flask-SQLAlchemy, `JSONStore` for exceptions](#sqlormstore-with-flask-sqlalchemy-jsonstore-for-exceptions)
+    * [`CSVStore` only IP Addresses](#csvstore-only-ip-addresses)
+<!-- TOC -->
+
 
 ## Minimal Example
 
