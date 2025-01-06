@@ -8,6 +8,17 @@ Store and monitor site traffic.
 
 ```bash
 pip install flask-traffic
+
+# extras:
+
+# SQLStore
+pip install flask-traffic[sqlalchemy]
+
+# SQLStore, SQLORMStore
+pip install flask-traffic[flask-sqlalchemy]
+
+# RedisStore
+pip install flask-traffic[redis]
 ```
 
 <!-- TOC -->
@@ -20,11 +31,32 @@ pip install flask-traffic
     * [SQLStore](#sqlstore)
     * [SQLORMStore](#sqlormstore)
       * [SQLORMModelMixin](#sqlormmodelmixin)
+    * [RedisStore](#redisstore)
   * [Reading store data](#reading-store-data)
   * [Bigger Examples](#bigger-examples)
     * [`SQLORMStore` with Flask-SQLAlchemy, `JSONStore` for exceptions](#sqlormstore-with-flask-sqlalchemy-jsonstore-for-exceptions)
     * [`CSVStore` only IP Addresses](#csvstore-only-ip-addresses)
 <!-- TOC -->
+
+**🚨 Note:**
+
+**SQLStore** requires `sqlalchmey`
+
+```bash
+pip install sqlalchemy
+```
+
+**SQLORMStore** requires `sqlalchmey` and recommends `flask-sqlalchemy`
+
+```bash
+pip install flask-sqlalchemy
+```
+
+**RedisStore** requires `redis`
+
+```bash
+pip install redis
+```
 
 ## Minimal Example
 
@@ -181,6 +213,10 @@ from app import db
 class Traffic(db.Model, SQLORMModelMixin):
     pass
 ```
+
+### RedisStore
+
+This store saves traffic data in a Redis service instance.
 
 ## Reading store data
 
