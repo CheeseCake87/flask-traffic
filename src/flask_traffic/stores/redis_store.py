@@ -151,4 +151,5 @@ class RedisStore:
                     }
                 )
 
+        logs.reverse()
         return logs
