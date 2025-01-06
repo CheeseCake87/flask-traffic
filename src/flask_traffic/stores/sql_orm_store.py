@@ -1,8 +1,14 @@
 import typing as t
 from datetime import datetime
 
-from sqlalchemy import Column, String, Integer, DateTime
-from sqlalchemy import insert, select, desc
+try:
+    from sqlalchemy import Column, String, Integer, DateTime
+    from sqlalchemy import insert, select, desc
+except ImportError:
+    raise ImportError(
+        "You're attempting to use a SQLORMStore but sqlalchemy is not installed. "
+        "Please install it with `pip install sqlalchemy` or `pip install flask-sqlalchemy`"
+    )
 
 from .._globals import IGNORE_LOCALS
 from .._log_policy import LogPolicy

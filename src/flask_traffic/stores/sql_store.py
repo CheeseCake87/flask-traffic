@@ -2,7 +2,21 @@ import typing as t
 from datetime import datetime
 from pathlib import Path
 
-from sqlalchemy import create_engine, Table, Column, String, Integer, DateTime, MetaData
+try:
+    from sqlalchemy import (
+        create_engine,
+        Table,
+        Column,
+        String,
+        Integer,
+        DateTime,
+        MetaData,
+    )
+except ImportError:
+    raise ImportError(
+        "You're attempting to use a SQLStore but sqlalchemy is not installed. "
+        "Please install it with `pip install sqlalchemy`"
+    )
 
 from .._globals import IGNORE_LOCALS
 from .._log_policy import LogPolicy
