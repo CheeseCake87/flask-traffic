@@ -11,10 +11,12 @@ classifiers = [
     "Natural Language :: English",
 ]
 requires-python = ">=3.9"
-dependencies = [
-    "Flask",
-    "sqlalchemy"
-]
+dependencies = ["Flask"]
+
+[project.optional-dependencies]
+sqlalchemy = ["sqlalchemy"]
+flask-sqlalchemy = ["flask-sqlalchemy"]
+redis = ["redis"]
 
 [project.urls]
 Source = "https://github.com/CheeseCake87/flask-traffic"
