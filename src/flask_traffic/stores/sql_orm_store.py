@@ -185,7 +185,7 @@ class SQLORMStore:
         self.db_session.execute(insert(self.model).values(data))
         self.db_session.commit()
 
-    def read(self):
+    def read(self) -> list[dict[str, t.Any]] | None:
         if hasattr(self.model, "traffic_id"):
             results = self.db_session.execute(
                 select(self.model).order_by(desc(self.model.traffic_id))
@@ -218,3 +218,5 @@ class SQLORMStore:
                 ]
 
             return []
+
+        return None
