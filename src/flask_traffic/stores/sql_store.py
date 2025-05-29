@@ -11,7 +11,8 @@ try:
         Integer,
         DateTime,
         MetaData,
-    )
+        BigInteger,
+)
 except ImportError:
     raise ImportError(
         "You're attempting to use a SQLStore but sqlalchemy is not installed. "
@@ -132,7 +133,7 @@ class SQLStore:
         self.database_log_table = Table(
             self.database_table_name,
             self.database_metadata,
-            Column("traffic_id", Integer, primary_key=True),
+            Column("traffic_id", BigInteger, primary_key=True),
             Column("request_date", DateTime, nullable=True),
             Column("request_method", String, nullable=True),
             Column("request_host_url", String, nullable=True),
