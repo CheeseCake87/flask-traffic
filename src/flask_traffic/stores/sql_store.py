@@ -223,12 +223,14 @@ class SQLStore:
             connection.execute(self.database_log_table.insert().values(data))
             connection.commit()
 
-    def read(self):
+    def read(self, limit: int = 10000) -> t.List[t.Dict[str, t.Any]] | None:
         with self.database_engine.connect() as connection:
-            results = connection.execute(
-                self.database_log_table.select().order_by(
-                    self.database_log_table.c.traffic_id.desc()
-                )
+            sel = self.database_log_table.select().order_by(
+                self.database_log_table.c.traffic_id.desc()
             )
+            if limit:
+                sel = sel.limit(limit)
+
+            results = connection.execute(sel)
 
             return [row._asdict() for row in results.fetchall()]
