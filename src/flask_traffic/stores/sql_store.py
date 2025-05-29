@@ -2,6 +2,8 @@ import typing as t
 from datetime import datetime
 from pathlib import Path
 
+from .._helpers import prevent_long_paths
+
 try:
     from sqlalchemy import (
         create_engine,
@@ -12,7 +14,7 @@ try:
         DateTime,
         MetaData,
         BigInteger,
-)
+    )
 except ImportError:
     raise ImportError(
         "You're attempting to use a SQLStore but sqlalchemy is not installed. "
@@ -187,6 +189,7 @@ class SQLStore:
         response_status_code: t.Optional[int] = None,
         response_exception: t.Optional[str] = None,
         response_mimetype: t.Optional[str] = None,
+        _max_request_path_length: int = 512,
     ) -> None:
         """
         Log the traffic data.
@@ -206,6 +209,7 @@ class SQLStore:
         :param response_status_code: the status code of the response
         :param response_exception: the exception that occurred (if any)
         :param response_mimetype: the mimetype of the response
+        :param _max_request_path_length: the maximum length of the request path to log
         :return:
         """
         data = {}
@@ -215,6 +219,13 @@ class SQLStore:
                 continue
 
             if attr_val:
+                # Prevent long paths from being stored
+                if attr == "request_path":
+                    data[attr] = prevent_long_paths(
+                        request_path, _max_request_path_length
+                    )
+                    continue
+
                 data[attr] = locals()[attr]
 
             else:

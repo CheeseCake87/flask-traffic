@@ -1,6 +1,8 @@
 import typing as t
 from datetime import datetime
 
+from .._helpers import prevent_long_paths
+
 try:
     from sqlalchemy import Column, String, Integer, DateTime, BigInteger
     from sqlalchemy import insert, select, desc
@@ -149,6 +151,7 @@ class SQLORMStore:
         response_status_code: t.Optional[int] = None,
         response_exception: t.Optional[str] = None,
         response_mimetype: t.Optional[str] = None,
+        _max_request_path_length: int = 512,
     ) -> None:
         """
         Log the traffic data.
@@ -168,6 +171,7 @@ class SQLORMStore:
         :param response_status_code: the status code of the response
         :param response_exception: the exception that occurred (if any)
         :param response_mimetype: the mimetype of the response
+        :param _max_request_path_length: the maximum length of the request path to log
         :return:
         """
         data = {}
@@ -177,6 +181,13 @@ class SQLORMStore:
                 continue
 
             if attr_val:
+                # Prevent long paths from being stored
+                if attr == "request_path":
+                    data[attr] = prevent_long_paths(
+                        request_path, _max_request_path_length
+                    )
+                    continue
+
                 data[attr] = locals()[attr]
 
             else:
@@ -187,10 +198,7 @@ class SQLORMStore:
 
     def read(self, limit: int = 10000) -> list[dict[str, t.Any]] | None:
         if hasattr(self.model, "traffic_id"):
-            sel = (
-                select(self.model)
-                .order_by(desc(self.model.traffic_id))
-            )
+            sel = select(self.model).order_by(desc(self.model.traffic_id))
             if limit:
                 sel = sel.limit(limit)
 
