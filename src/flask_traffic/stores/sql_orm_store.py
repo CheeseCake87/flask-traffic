@@ -2,7 +2,7 @@ import typing as t
 from datetime import datetime
 
 try:
-    from sqlalchemy import Column, String, Integer, DateTime
+    from sqlalchemy import Column, String, Integer, DateTime, BigInteger
     from sqlalchemy import insert, select, desc
 except ImportError:
     raise ImportError(
@@ -41,7 +41,7 @@ class SQLORMModelMixin:
     ::
 
         __tablename__ = "_traffic_"
-        traffic_id = Column(Integer, primary_key=True)
+        traffic_id = Column(BigInteger, primary_key=True)
         request_date = Column(DateTime, nullable=True)
         request_method = Column(String, nullable=True)
         request_host_url = Column(String, nullable=True)
@@ -62,7 +62,7 @@ class SQLORMModelMixin:
     """
 
     __tablename__ = "_traffic_"
-    traffic_id = Column(Integer, primary_key=True)
+    traffic_id = Column(BigInteger, primary_key=True)
     request_date = Column(DateTime, nullable=True)
     request_method = Column(String, nullable=True)
     request_host_url = Column(String, nullable=True)
@@ -185,11 +185,16 @@ class SQLORMStore:
         self.db_session.execute(insert(self.model).values(data))
         self.db_session.commit()
 
-    def read(self) -> list[dict[str, t.Any]] | None:
+    def read(self, limit: int = 10000) -> list[dict[str, t.Any]] | None:
         if hasattr(self.model, "traffic_id"):
-            results = self.db_session.execute(
-                select(self.model).order_by(desc(self.model.traffic_id))
+            sel = (
+                select(self.model)
+                .order_by(desc(self.model.traffic_id))
             )
+            if limit:
+                sel = sel.limit(limit)
+
+            results = self.db_session.execute(sel)
 
             if results:
                 return [
