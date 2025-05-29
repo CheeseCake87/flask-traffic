@@ -36,6 +36,8 @@ class LogPolicy:
     only_on_exception: bool
     skip_on_exception: bool
 
+    max_request_path_length: int
+
     def __repr__(self) -> str:
         return f"<LogPolicy {self.__dict__}>"
 
@@ -47,6 +49,7 @@ class LogPolicy:
         skip_status_codes: Optional[Iterable[str]] = None,
         only_on_exception: bool = False,
         skip_on_exception: bool = False,
+        max_request_path_length: int = 512,
     ) -> None:
         """
         Create a new LogPolicy instance.
@@ -90,12 +93,15 @@ class LogPolicy:
             only_on_exception = False
             skip_on_exception = False
 
+            max_request_path_length: int = 512
+
         :param on_endpoints: only log requests to these endpoints
         :param skip_endpoints: do not log requests to these endpoints
         :param on_status_codes: only log requests with these status codes
         :param skip_status_codes: do not log requests with these status codes
         :param only_on_exception: only create a log entry if an exception is raised during the request if True
         :param skip_on_exception: do not create a log entry if an exception is raised during the request if True
+        :param max_request_path_length: the maximum length of the request path to log
         """
 
         self.request_date = True
@@ -139,6 +145,8 @@ class LogPolicy:
 
         self.only_on_exception = only_on_exception
         self.skip_on_exception = skip_on_exception
+
+        self.max_request_path_length = max_request_path_length
 
     def set_from_true(
         self,
