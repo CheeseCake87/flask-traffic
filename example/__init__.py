@@ -21,6 +21,7 @@ class ModelModel(db.Model, SQLORMModelMixin):
 log_policy = LogPolicy(
     skip_endpoints=("static",),
     skip_on_exception=True,
+    max_request_path_length=100,
 ).set_from_false(
     request_date=True,
     request_browser=True,
