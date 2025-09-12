@@ -2,8 +2,12 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 from flask_traffic import Traffic, LogPolicy
-from flask_traffic.stores import JSONStore, CSVStore, SQLStore, SQLORMStore, \
-    SQLORMModelMixin, RedisStore
+
+from flask_traffic.stores.json import JSONStore
+from flask_traffic.stores.csv import CSVStore
+from flask_traffic.stores.sql import SQLStore
+from flask_traffic.stores.sql_orm import SQLORMStore, SQLORMModelMixin
+from flask_traffic.stores.redis import RedisStore
 
 # create an instance of the flask_sqlalchemy extension
 db = SQLAlchemy()
