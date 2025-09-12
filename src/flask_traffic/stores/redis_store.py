@@ -9,6 +9,7 @@ from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
+
     try:
         from redis import Redis
     except ImportError:
