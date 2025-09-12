@@ -58,7 +58,7 @@ pip install "flask-traffic[redis]"
 ```python
 from flask import Flask
 from flask_traffic import Traffic
-from flask_traffic.stores import JSONStore
+from flask_traffic.stores.json import JSONStore
 
 traffic = Traffic()
 
@@ -132,7 +132,7 @@ by default.
 Here's an example of the `LogPolicy` class only storing the date and request path:
 
 ```python
-from flask_traffic.stores import JSONStore
+from flask_traffic.stores.json import JSONStore
 from flask_traffic import LogPolicy
 
 log_policy = LogPolicy().set_from_false(
@@ -157,7 +157,7 @@ Results in:
 Here's an example of the `LogPolicy` class storing everything except the response size:
 
 ```python
-from flask_traffic.stores import JSONStore
+from flask_traffic.stores.json import JSONStore
 from flask_traffic import LogPolicy
 
 log_policy = LogPolicy().set_from_true(
@@ -171,15 +171,29 @@ json_store = JSONStore(log_policy=log_policy)
 
 ### JSONStore
 
+```python
+from flask_traffic.stores.json import JSONStore
+```
+
 This store saves traffic data in a JSON file. The file is created in the
 `instance` folder of the Flask app by default.
 
 ### CSVStore
 
+```python
+from flask_traffic.stores.csv import CSVStore
+```
+
 This store saves traffic data in a CSV file. The file is created in the
 `instance` folder of the Flask app by default.
 
 ### SQLStore
+
+`requires sqlalchmey`
+
+```python
+from flask_traffic.stores.sql import SQLStore
+```
 
 This store saves traffic data in a SQL type database. It defaults to using SQLite
 which is created in the `instance` folder of the Flask app by default.
@@ -190,17 +204,27 @@ This store is used if you want to store traffic data in a SQL type database.
 
 ### SQLORMStore
 
+`requires flask-sqlalchmey`
+
+```python
+from flask_traffic.stores.sql_orm import SQLORMStore
+```
+
 This is an ORM version of the `SQLStore`. It is designed to integrate with an existing
 SQLAlchemy ORM environment like Flask-SQLAlchemy.
 
 #### SQLORMModelMixin
+
+```python
+from flask_traffic.stores.sql_orm import SQLORMModelMixin
+```
 
 This mixin is used to set the correct table columns for the `SQLORMStore`.
 
 Example:
 
 ```python
-from flask_traffic.stores import SQLORMModelMixin
+from flask_traffic.stores.sql_orm import SQLORMModelMixin
 
 from app import db
 
@@ -210,6 +234,10 @@ class Traffic(db.Model, SQLORMModelMixin):
 ```
 
 ### RedisStore
+
+```python
+from flask_traffic.stores.redis import Redis
+```
 
 This store sends traffic data to a Redis event stream.
 
@@ -260,7 +288,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from flask_traffic import Traffic, LogPolicy
-from flask_traffic.stores import JSONStore, SQLORMStore, SQLORMModelMixin
+from flask_traffic.stores.json import JSONStore
+from flask_traffic.stores.sql_orm import SQLORMStore, SQLORMModelMixin
 
 db = SQLAlchemy()
 traffic = Traffic()
@@ -309,7 +338,7 @@ This example will store traffic data in a CSV file and only store the IP address
 from flask import Flask
 
 from flask_traffic import Traffic, LogPolicy
-from flask_traffic.stores import CSVStore
+from flask_traffic.stores.csv import CSVStore
 
 traffic = Traffic()
 
