@@ -116,6 +116,9 @@ class SQLORMStore:
 
             self.log_policy = LogPolicy()
 
+        else:
+            self.log_policy = log_policy
+
         self.model = model
         self.db_session = db_session
 
