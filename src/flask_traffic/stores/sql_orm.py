@@ -3,6 +3,14 @@ from datetime import datetime
 
 from .._helpers import prevent_long_paths
 
+try:
+    from sqlalchemy import Column, String, Integer, DateTime, BigInteger
+    from sqlalchemy import insert, select, desc
+except ImportError:
+    raise ImportError(
+        "You're attempting to use a SQLORMStore but sqlalchemy is not installed. "
+        "Please install it with `pip install sqlalchemy` or `pip install flask-sqlalchemy`"
+    )
 
 from .._globals import IGNORE_LOCALS
 from .._log_policy import LogPolicy
@@ -14,13 +22,6 @@ if t.TYPE_CHECKING:
 
 
 class SQLORMModelMixin:
-    try:
-        from sqlalchemy import Column, String, Integer, DateTime, BigInteger
-    except ImportError:
-        raise ImportError(
-            "You're attempting to use a SQLORMStore but sqlalchemy is not installed. "
-            "Please install it with `pip install sqlalchemy` or `pip install flask-sqlalchemy`"
-        )
     """
     A mixin for use with ORM SQLAlchemy / Flask-SQLAlchemy models.
 
@@ -151,13 +152,6 @@ class SQLORMStore:
         response_exception: t.Optional[str] = None,
         response_mimetype: t.Optional[str] = None,
     ) -> None:
-        try:
-            from sqlalchemy import insert
-        except ImportError:
-            raise ImportError(
-                "You're attempting to use a SQLORMStore but sqlalchemy is not installed. "
-                "Please install it with `pip install sqlalchemy` or `pip install flask-sqlalchemy`"
-            )
         """
         Log the traffic data.
 
@@ -201,14 +195,6 @@ class SQLORMStore:
         self.db_session.commit()
 
     def read(self, limit: int = 10000) -> list[dict[str, t.Any]] | None:
-        try:
-            from sqlalchemy import select, desc
-        except ImportError:
-            raise ImportError(
-                "You're attempting to use a SQLORMStore but sqlalchemy is not installed. "
-                "Please install it with `pip install sqlalchemy` or `pip install flask-sqlalchemy`"
-            )
-
         if hasattr(self.model, "traffic_id"):
             sel = select(self.model).order_by(desc(self.model.traffic_id))
             if limit:

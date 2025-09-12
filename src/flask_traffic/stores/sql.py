@@ -4,14 +4,29 @@ from pathlib import Path
 
 from .._helpers import prevent_long_paths
 
+try:
+    from sqlalchemy import (
+        create_engine,
+        Table,
+        Column,
+        String,
+        Integer,
+        DateTime,
+        MetaData,
+        BigInteger,
+    )
+except ImportError:
+    raise ImportError(
+        "You're attempting to use a SQLStore but sqlalchemy is not installed. "
+        "Please install it with `pip install sqlalchemy`"
+    )
+
 from .._globals import IGNORE_LOCALS
 from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
     from sqlalchemy.engine import Engine
-    from sqlalchemy.sql.schema import Table
-    from sqlalchemy.sql.schema import MetaData
 
 
 class SQLStore:
@@ -102,22 +117,6 @@ class SQLStore:
     def _init_database(
         self, url: t.Optional[str] = None, engine: t.Optional["Engine"] = None
     ) -> None:
-        try:
-            from sqlalchemy import (
-                create_engine,
-                Table,
-                Column,
-                String,
-                Integer,
-                DateTime,
-                MetaData,
-                BigInteger,
-            )
-        except ImportError:
-            raise ImportError(
-                "You're attempting to use a SQLStore but sqlalchemy is not installed. "
-                "Please install it with `pip install sqlalchemy`"
-            )
         """
         Initialize the database connection and create the table.
 
