@@ -15,6 +15,7 @@ try:
         MetaData,
         BigInteger,
     )
+    from sqlalchemy.dialects import postgresql, mysql, sqlite
 except ImportError:
     raise ImportError(
         "You're attempting to use a SQLStore but sqlalchemy is not installed. "
@@ -27,6 +28,12 @@ from .._log_policy import LogPolicy
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
     from sqlalchemy.engine import Engine
+
+
+BigIntegerType = BigInteger()
+BigIntegerType = BigIntegerType.with_variant(postgresql.BIGINT(), "postgresql")
+BigIntegerType = BigIntegerType.with_variant(mysql.BIGINT(), "mysql")
+BigIntegerType = BigIntegerType.with_variant(sqlite.INTEGER(), "sqlite")
 
 
 class SQLStore:
@@ -135,7 +142,7 @@ class SQLStore:
         self.database_log_table = Table(
             self.database_table_name,
             self.database_metadata,
-            Column("traffic_id", BigInteger, primary_key=True),
+            Column("traffic_id", BigIntegerType, primary_key=True),
             Column("request_date", DateTime, nullable=True),
             Column("request_method", String, nullable=True),
             Column("request_host_url", String, nullable=True),

@@ -6,6 +6,9 @@ from .._helpers import prevent_long_paths
 try:
     from sqlalchemy import Column, String, Integer, DateTime, BigInteger
     from sqlalchemy import insert, select, desc
+    from sqlalchemy.dialects import postgresql, mysql, sqlite
+
+
 except ImportError:
     raise ImportError(
         "You're attempting to use a SQLORMStore but sqlalchemy is not installed. "
@@ -19,6 +22,12 @@ if t.TYPE_CHECKING:
     from .._traffic import Traffic
     from sqlalchemy.orm import Session
     from sqlalchemy.sql._typing import _DMLTableArgument
+
+
+BigIntegerType = BigInteger()
+BigIntegerType = BigIntegerType.with_variant(postgresql.BIGINT(), "postgresql")
+BigIntegerType = BigIntegerType.with_variant(mysql.BIGINT(), "mysql")
+BigIntegerType = BigIntegerType.with_variant(sqlite.INTEGER(), "sqlite")
 
 
 class SQLORMModelMixin:
@@ -64,7 +73,7 @@ class SQLORMModelMixin:
     """
 
     __tablename__ = "_traffic_"
-    traffic_id = Column(BigInteger, primary_key=True)
+    traffic_id = Column(BigIntegerType, primary_key=True)
     request_date = Column(DateTime, nullable=True)
     request_method = Column(String, nullable=True)
     request_host_url = Column(String, nullable=True)
