@@ -3,23 +3,23 @@ from datetime import datetime
 
 from .._helpers import prevent_long_paths
 
-try:
-    from redis import Redis
-except ImportError:
-    raise ImportError(
-        "You're attempting to use a RedisStore but redis is not installed. "
-        "Please install it with `pip install redis`"
-    )
 
 from .._globals import IGNORE_LOCALS
 from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
+    try:
+        from redis import Redis
+    except ImportError:
+        raise ImportError(
+            "You're attempting to use a RedisStore but redis is not installed. "
+            "Please install it with `pip install redis`"
+        )
 
 
 class RedisStore:
-    client: Redis
+    client: "Redis"
     log_policy: LogPolicy
     event_name: str
 
@@ -36,6 +36,13 @@ class RedisStore:
         redis_port: int = 6379,
         log_policy: LogPolicy | None = None,
     ) -> None:
+        try:
+            from redis import Redis
+        except ImportError:
+            raise ImportError(
+                "You're attempting to use a RedisStore but redis is not installed. "
+                "Please install it with `pip install redis`"
+            )
         """
         Create a new RedisStore instance.
 
