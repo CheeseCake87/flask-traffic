@@ -28,7 +28,7 @@ class StoreProtocol(t.Protocol):
         request_browser: t.Optional[str] = None,
         request_platform: t.Optional[str] = None,
         response_time: t.Optional[int] = None,
-        response_size: t.Optional[str] = None,
+        response_size: t.Optional[t.Union[int, str]] = None,
         response_status_code: t.Optional[int] = None,
         response_exception: t.Optional[str] = None,
         response_mimetype: t.Optional[str] = None,

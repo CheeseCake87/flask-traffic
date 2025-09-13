@@ -27,7 +27,7 @@ class JSONStore:
         self,
         filename: str = "traffic.json",
         location: t.Optional[t.Union[str, Path]] = None,
-        log_policy: LogPolicy = None,
+        log_policy: t.Optional["LogPolicy"] = None,
     ) -> None:
         """
         Create a new JSONStore instance.
@@ -56,6 +56,9 @@ class JSONStore:
         """
         # set filepath to instance folder if location is None
         if self.location is None:
+            if traffic_instance.app_instance_folder is None:
+                raise ValueError("No app instance folder was found or passed in.")
+
             self.filepath = traffic_instance.app_instance_folder / self.filename
         else:
             # This expects an absolute path

@@ -32,9 +32,9 @@ class RedisStore:
         self,
         redis_host: str,
         event_name: str,
-        redis_password: str | None = None,
+        redis_password: t.Optional[str] = None,
         redis_port: int = 6379,
-        log_policy: LogPolicy | None = None,
+        log_policy: t.Optional[LogPolicy] = None,
     ) -> None:
         """
         Create a new RedisStore instance.
@@ -60,7 +60,7 @@ class RedisStore:
         else:
             self.log_policy = log_policy
 
-    def setup(self, traffic_instance: "Traffic"):
+    def setup(self, traffic_instance: "Traffic") -> None:
         """
         Nothing to set up in redis store
         """
@@ -106,7 +106,7 @@ class RedisStore:
         """
         legal_types = (str, int, float, bytes)
 
-        data = {}
+        data: t.Dict[str, t.Union[str, int, float, None]] = {}
 
         for attr, attr_val in self.log_policy.__dict__.items():
             if attr in IGNORE_LOCALS:
@@ -136,7 +136,7 @@ class RedisStore:
             else:
                 continue
 
-        self.client.xadd(name=self.event_name, fields=data)
+        self.client.xadd(name=self.event_name, fields=data)  # type: ignore
 
     def read(self) -> t.List[t.Dict[str, t.Any]]:
         """
@@ -148,8 +148,8 @@ class RedisStore:
         logs: t.List[t.Dict[str, t.Any]] = []
 
         data_stream = self.client.xread(streams={self.event_name: 0})
-        if len(data_stream) > 0:
-            msg_stream = data_stream[0]
+        if len(data_stream) > 0:  # type: ignore
+            msg_stream = data_stream[0]  # type: ignore
             messages = msg_stream[1]
 
             for msg in messages:

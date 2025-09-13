@@ -62,12 +62,12 @@ json_exception_store = JSONStore(
     filename="exception.json", log_policy=only_on_exception)
 
 # This example is configure to connect to a docker instance of redis
-redis_store = RedisStore(
-    redis_host="localhost",
-    event_name="traffic",
-    redis_port=8001,
-    log_policy=log_policy,
-)
+# redis_store = RedisStore(
+#     redis_host="localhost",
+#     event_name="traffic",
+#     redis_port=8001,
+#     log_policy=log_policy,
+# )
 
 
 # create a custom store and override the read method
@@ -97,7 +97,7 @@ def create_app() -> Flask:
         json_store,
         sql_store,
         sqlorm_store,
-        redis_store,
+        # redis_store,
         json_exception_store,
         store_read_override
     ])

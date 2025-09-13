@@ -21,12 +21,9 @@ from .._log_policy import LogPolicy
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
     from sqlalchemy.orm import Session
-    from sqlalchemy.sql._typing import _DMLTableArgument
-
 
 BigIntegerType = BigInteger()
-BigIntegerType = BigIntegerType.with_variant(postgresql.BIGINT(), "postgresql")
-BigIntegerType = BigIntegerType.with_variant(mysql.BIGINT(), "mysql")
+BigIntegerType = BigIntegerType.with_variant(postgresql.BIGINT(), "postgresql", "mysql")
 BigIntegerType = BigIntegerType.with_variant(sqlite.INTEGER(), "sqlite")
 
 
@@ -93,16 +90,24 @@ class SQLORMModelMixin:
 
 class SQLORMStore:
     db_session: t.Optional["Session"]
-    model: "_DMLTableArgument"
+    model: t.Any
+    log_policy: LogPolicy
 
     def __repr__(self) -> str:
-        return f"<SQLORMStore model={self.model.__name__} log_policy={self.log_policy}>"
+        try:
+            return (
+                f"<SQLORMStore "
+                f"model={self.model.__name__} "  # type: ignore
+                f"log_policy={self.log_policy}>"
+            )
+        except AttributeError:
+            return f"<SQLORMStore model=UNKNOWN log_policy={self.log_policy}>"
 
     def __init__(
         self,
-        model: "_DMLTableArgument",
+        model: t.Any,
         db_session: t.Optional["Session"] = None,
-        log_policy: LogPolicy = None,
+        log_policy: t.Optional[LogPolicy] = None,
     ) -> None:
         """
         Create a new SQLORMStore instance.
@@ -184,7 +189,7 @@ class SQLORMStore:
         :param response_mimetype: the mimetype of the response
         :return:
         """
-        data = {}
+        data: t.Dict[str, t.Union[str, int, float, None]] = {}
 
         for attr, attr_val in self.log_policy.__dict__.items():
             if attr in IGNORE_LOCALS:
@@ -203,16 +208,17 @@ class SQLORMStore:
             else:
                 data[attr] = None
 
-        self.db_session.execute(insert(self.model).values(data))
-        self.db_session.commit()
+        self.db_session.execute(insert(self.model).values(data))  # type: ignore
+        self.db_session.commit()  # type: ignore
 
-    def read(self, limit: int = 10000) -> list[dict[str, t.Any]] | None:
+    def read(self, limit: int = 10000) -> t.Optional[list[dict[str, t.Any]]]:
         if hasattr(self.model, "traffic_id"):
-            sel = select(self.model).order_by(desc(self.model.traffic_id))
+            sel = select(self.model).order_by(
+                desc(self.model.traffic_id))  # type: ignore
             if limit:
                 sel = sel.limit(limit)
 
-            results = self.db_session.execute(sel)
+            results = self.db_session.execute(sel)  # type: ignore
 
             if results:
                 return [

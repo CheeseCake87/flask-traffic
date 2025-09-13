@@ -27,7 +27,7 @@ class CSVStore:
         self,
         filename: str = "traffic.csv",
         location: t.Optional[t.Union[str, Path]] = None,
-        log_policy: LogPolicy = None,
+        log_policy: t.Optional["LogPolicy"] = None,
     ) -> None:
         """
         Create a new CSVStore instance.
@@ -56,6 +56,9 @@ class CSVStore:
         """
         # set filepath to instance folder if location is None
         if self.location is None:
+            if traffic_instance.app_instance_folder is None:
+                raise ValueError("No app instance folder was found or passed in.")
+
             self.filepath = traffic_instance.app_instance_folder / self.filename
         else:
             # This expects an absolute path
@@ -113,7 +116,7 @@ class CSVStore:
         :param response_mimetype: the mimetype of the response
         :return:
         """
-        data = {}
+        data: t.Dict[str, t.Union[str, int, float, None]] = {}
 
         for attr, attr_val in self.log_policy.__dict__.items():
             if attr in IGNORE_LOCALS:
@@ -137,7 +140,7 @@ class CSVStore:
                 data[attr] = None
 
         with open(self.filepath, "a+") as f:
-            writer = csv.DictWriter(f, fieldnames=data.keys())  # type: ignore
+            writer = csv.DictWriter(f, fieldnames=data.keys())
 
             if f.tell() == 0:
                 # write the header if the file is empty

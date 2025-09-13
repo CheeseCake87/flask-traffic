@@ -27,12 +27,11 @@ from .._log_policy import LogPolicy
 
 if t.TYPE_CHECKING:
     from .._traffic import Traffic
-    from sqlalchemy.engine import Engine
 
+from sqlalchemy.engine import Engine
 
 BigIntegerType = BigInteger()
-BigIntegerType = BigIntegerType.with_variant(postgresql.BIGINT(), "postgresql")
-BigIntegerType = BigIntegerType.with_variant(mysql.BIGINT(), "mysql")
+BigIntegerType = BigIntegerType.with_variant(postgresql.BIGINT(), "postgresql", "mysql")
 BigIntegerType = BigIntegerType.with_variant(sqlite.INTEGER(), "sqlite")
 
 
@@ -62,11 +61,11 @@ class SQLStore:
 
     def __init__(
         self,
-        filename: t.Optional[str] = "traffic.sqlite",
+        filename: t.Optional[str] = None,
         location: t.Optional[t.Union[str, Path]] = None,
-        log_policy: LogPolicy = None,
+        log_policy: t.Optional[LogPolicy] = None,
         *,
-        database_table_name: t.Optional[str] = "_traffic_",
+        database_table_name: t.Optional[str] = None,
         database_url: t.Optional[str] = None,
         database_engine: t.Optional["Engine"] = None,
     ) -> None:
@@ -102,7 +101,7 @@ class SQLStore:
         else:
             self.database_engine = None
 
-        self.filename = filename
+        self.filename = filename if filename else "traffic.sqlite"
         self.location = location
 
     def _build_database_filepath(self, traffic_instance: "Traffic") -> None:
@@ -113,7 +112,11 @@ class SQLStore:
         :return:
         """
         if self.location is None:
+            if traffic_instance.app_instance_folder is None:
+                raise ValueError("No app instance folder was found or passed in.")
+
             self.filepath = traffic_instance.app_instance_folder / self.filename
+
         else:
             if isinstance(self.location, str):
                 self.filepath = Path(self.location) / self.filename
@@ -121,26 +124,24 @@ class SQLStore:
             if isinstance(self.location, Path):
                 self.filepath = self.location / self.filename
 
-    def _init_database(
-        self, url: t.Optional[str] = None, engine: t.Optional["Engine"] = None
-    ) -> None:
+    def _create_engine_from_url(self, url: str) -> None:
+        self.database_engine = create_engine(url)
+
+    def _create_engine_from_filepath(self) -> None:
+        self.database_engine = create_engine(f"sqlite:///{self.filepath}")
+
+    def _load_engine(self, engine: "Engine") -> None:
+        self.database_engine = engine
+
+    def _init_database(self) -> None:
         """
         Initialize the database connection and create the table.
 
-        :param url:
-        :param engine:
         :return:
         """
-        if url:
-            self.database_engine = create_engine(self.database_url)
-        elif engine:
-            self.database_engine = engine
-        else:
-            self.database_engine = create_engine(f"sqlite:///{self.filepath}")
-
         self.database_metadata = MetaData()
         self.database_log_table = Table(
-            self.database_table_name,
+            self.database_table_name if self.database_table_name else "_traffic_",
             self.database_metadata,
             Column("traffic_id", BigIntegerType, primary_key=True),
             Column("request_date", DateTime, nullable=True),
@@ -168,16 +169,21 @@ class SQLStore:
         :return:
         """
         if self.database_url:
-            self._init_database(url=self.database_url)
+            self._create_engine_from_url(url=self.database_url)
 
         elif self.database_engine:
-            self._init_database(engine=self.database_engine)
+            self._load_engine(engine=self.database_engine)
 
         else:
             self._build_database_filepath(traffic_instance)
-            self._init_database()
+            self._create_engine_from_filepath()
 
-        self.database_metadata.create_all(self.database_engine)
+        self._init_database()
+
+        if isinstance(self.database_engine, Engine) and isinstance(
+            self.database_metadata, MetaData
+        ):
+            self.database_metadata.create_all(self.database_engine)
 
     def log(
         self,
@@ -217,7 +223,9 @@ class SQLStore:
         :param response_mimetype: the mimetype of the response
         :return:
         """
-        data = {}
+        assert self.database_engine is not None, "Database engine is not initialized."
+
+        data: t.Dict[str, t.Union[str, int, float, None]] = {}
 
         for attr, attr_val in self.log_policy.__dict__.items():
             if attr in IGNORE_LOCALS:
@@ -237,14 +245,19 @@ class SQLStore:
                 data[attr] = None
 
         with self.database_engine.connect() as connection:
-            connection.execute(self.database_log_table.insert().values(data))
+            connection.execute(
+                self.database_log_table.insert().values(data)  # type: ignore
+            )
             connection.commit()
 
-    def read(self, limit: int = 10000) -> t.List[t.Dict[str, t.Any]] | None:
+    def read(self, limit: int = 10000) -> t.Optional[t.List[t.Dict[str, t.Any]]]:
+        assert self.database_engine is not None, "Database engine is not initialized."
+
         with self.database_engine.connect() as connection:
-            sel = self.database_log_table.select().order_by(
-                self.database_log_table.c.traffic_id.desc()
+            sel = self.database_log_table.select().order_by(  # type: ignore
+                self.database_log_table.c.traffic_id.desc()  # type: ignore
             )
+
             if limit:
                 sel = sel.limit(limit)
 

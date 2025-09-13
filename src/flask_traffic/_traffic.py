@@ -18,7 +18,7 @@ class Traffic:
     app: Flask
     app_instance_folder: t.Optional[Path]
 
-    stores: t.Union[StoreProtocol, t.List[StoreProtocol]]
+    stores: t.List[StoreProtocol]
 
     def __repr__(self) -> str:
         return f"<Traffic stores={self.stores}>"
@@ -26,7 +26,7 @@ class Traffic:
     def __init__(
         self,
         app: t.Optional[Flask] = None,
-        stores: t.Optional[t.Union[StoreProtocol, t.List[StoreProtocol]]] = None,
+        stores: t.Optional[t.List[StoreProtocol]] = None,
     ) -> None:
         """
         Initialize the flask-traffic extension.
@@ -42,7 +42,7 @@ class Traffic:
     def init_app(
         self,
         app: Flask,
-        stores: t.Union[t.Union[StoreProtocol, t.List[StoreProtocol]]],
+        stores: t.List[StoreProtocol],
     ) -> None:
         """
         Initialize the flask-traffic extension.
@@ -61,11 +61,7 @@ class Traffic:
         self.app.extensions["traffic"] = self
         self.app_instance_folder = Path(app.instance_path)
 
-        if isinstance(stores, list):
-            self.stores = stores
-        else:
-            self.stores = [stores]
-
+        self.stores = stores
         self._setup_stores()
         self._setup_request_watcher()
 
@@ -86,11 +82,11 @@ class Traffic:
         """
 
         @self.app.before_request
-        def traffic_before_request():
+        def traffic_before_request() -> None:
             g.traffic_timer = timeit.default_timer()
 
         @self.app.after_request
-        def traffic_after_request(response) -> Response:
+        def traffic_after_request(response: Response) -> Response:
             for store in self.stores:
                 # If on_endpoints is set, only log requests to those endpoints
                 if store.log_policy.on_endpoints:

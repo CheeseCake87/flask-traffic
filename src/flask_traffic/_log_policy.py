@@ -1,4 +1,4 @@
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Union
 
 
 class LogPolicy:
@@ -27,11 +27,11 @@ class LogPolicy:
     response_exception: bool
     response_mimetype: bool
 
-    on_endpoints: Iterable
-    skip_endpoints: Iterable
+    on_endpoints: Iterable[Union[str, None]]
+    skip_endpoints: Iterable[Union[str, None]]
 
-    on_status_codes: Iterable
-    skip_status_codes: Iterable
+    on_status_codes: Iterable[Union[int, None]]
+    skip_status_codes: Iterable[Union[int, None]]
 
     only_on_exception: bool
     skip_on_exception: bool
@@ -45,8 +45,8 @@ class LogPolicy:
         self,
         on_endpoints: Optional[Iterable[str]] = None,
         skip_endpoints: Optional[Iterable[str]] = None,
-        on_status_codes: Optional[Iterable[str]] = None,
-        skip_status_codes: Optional[Iterable[str]] = None,
+        on_status_codes: Optional[Iterable[int]] = None,
+        skip_status_codes: Optional[Iterable[int]] = None,
         only_on_exception: bool = False,
         skip_on_exception: bool = False,
         max_request_path_length: int = 512,

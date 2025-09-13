@@ -1,9 +1,15 @@
-def prevent_long_paths(path: str, max_length: int = 512) -> str:
+from typing import Optional
+
+
+def prevent_long_paths(path: Optional[str], max_length: int = 512) -> str:
     """
     Prevents the path from being too long.
 
     Default max length is 512 characters.
     """
+    if not path:
+        return ""
+
     max_ = max(2, max_length if max_length > 0 else 512)
 
     if len(path) <= max_:

@@ -27,3 +27,23 @@ build-backend = "flit_core.buildapi"
 
 [tool.ruff]
 include = ["src/**/*.py"]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.1",
+    "pyright>=1.1.405",
+    "pytest>=8.4.2",
+]
+
+[tool.mypy]
+python_version = "3.9"
+files = ["src/flask_traffic"]
+show_error_codes = true
+pretty = true
+strict = true
+warn_unused_ignores = false
+
+[tool.pyright]
+pythonVersion = "3.9"
+include = ["src/flask_traffic"]
+typeCheckingMode = "basic"
